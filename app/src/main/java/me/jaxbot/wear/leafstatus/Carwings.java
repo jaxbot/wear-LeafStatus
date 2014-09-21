@@ -1,6 +1,7 @@
 package me.jaxbot.wear.leafstatus;
 
 import android.content.SharedPreferences;
+import android.util.Log;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
@@ -19,6 +20,8 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Created by jonathan on 9/21/14.
@@ -60,18 +63,46 @@ public class Carwings {
         return null;
     }
 
+    private String getCarId(CookieStore jar) {
+        // This is a particularly bad and non-future-safe operation,
+        // but so is the entire application, since Nissan's API is internal
+        String vehicleHTML = getHTTPString("https://www.nissanusa.com/owners/vehicles", jar);
+        Pattern pattern = Pattern.compile("(.*)div class=\"vehicleHeader\" id=\"(\\d+)\"(.*)");
+        Matcher m = pattern.matcher(vehicleHTML);
+        if (m.matches()) {
+            return m.group(2);
+        } else {
+            Log.e("Leaf", "Failed to find vehicle id");
+            return "";
+        }
+    }
+
     public void update() {
         try {
             CookieStore jar = this.login();
+            String carid = this.getCarId(jar);
 
             DefaultHttpClient httpclient = new DefaultHttpClient();
-            HttpGet httpget = new HttpGet("https://www.nissanusa.com/owners/vehicles/statusRefresh?id=50405");
+            HttpGet httpget = new HttpGet("https://www.nissanusa.com/owners/vehicles/statusRefresh?id=" + carid);
             httpclient.setCookieStore(jar);
             httpclient.execute(httpget);
 
-            httpclient = new DefaultHttpClient();
+            String result = getHTTPString("https://www.nissanusa.com/owners/vehicles/pollStatusRefresh?id=" + carid, jar);
+
+            JSONObject jObject = new JSONObject(result);
+            this.currentBattery = jObject.getInt("currentBattery");
+            this.chargeTime = jObject.getString("chargeTime");
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+    }
+
+    private String getHTTPString(String url, CookieStore jar) {
+        try {
+            DefaultHttpClient httpclient = new DefaultHttpClient();
+            HttpGet httpget = new HttpGet(url);
+
             httpclient.setCookieStore(jar);
-            httpget = new HttpGet("https://www.nissanusa.com/owners/vehicles/pollStatusRefresh?id=50405");
             HttpResponse response = httpclient.execute(httpget);
 
             InputStream inputStream = response.getEntity().getContent();
@@ -83,12 +114,12 @@ public class Carwings {
 
             inputStream.close();
 
-            JSONObject jObject = new JSONObject(result);
-            this.currentBattery = jObject.getInt("currentBattery");
-            this.chargeTime = jObject.getString("chargeTime");
+            return result;
         } catch (Exception e) {
             System.out.println(e);
         }
+
+        return "";
     }
 
 }

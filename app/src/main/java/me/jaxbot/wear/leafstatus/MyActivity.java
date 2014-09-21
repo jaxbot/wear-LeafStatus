@@ -21,7 +21,7 @@ public class MyActivity extends ActionBarActivity {
 
         AlarmManager am = (AlarmManager) getSystemService(ALARM_SERVICE);
         // Start after 60 seconds, run every hour
-        am.setRepeating(AlarmManager.RTC_WAKEUP, 60000, 3600000, sender);
+        am.setRepeating(AlarmManager.RTC_WAKEUP, 6000, 360000000, sender);
 
         Button button = (Button) findViewById(R.id.button);
         button.setOnClickListener(new View.OnClickListener() {
