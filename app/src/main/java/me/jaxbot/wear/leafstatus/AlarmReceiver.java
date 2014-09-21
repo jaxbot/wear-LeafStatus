@@ -1,6 +1,5 @@
 package me.jaxbot.wear.leafstatus;
 
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v4.content.WakefulBroadcastReceiver;
@@ -12,7 +11,7 @@ public class AlarmReceiver extends WakefulBroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        Log.d("Hello", "Alarming!");
+        Log.d("A", "Alarm triggered");
         Intent service = new Intent(context, UpdateCarwingsService.class);
         startWakefulService(context, service);
     }
