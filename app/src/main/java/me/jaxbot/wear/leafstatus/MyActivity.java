@@ -6,11 +6,32 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.support.v4.app.NotificationCompat;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+
+import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.message.BasicNameValuePair;
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.CookieStore;
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class MyActivity extends ActionBarActivity {
@@ -26,7 +47,77 @@ public class MyActivity extends ActionBarActivity {
         setContentView(R.layout.activity_my);
 
         sendNotification("Time till full: 2:30");
+
+        new AsyncTask<Void, Void, Void>() {
+            @Override
+            protected Void doInBackground(Void... params) {
+                carwingsLogin();
+                return null;
+            }
+        }.execute(null, null, null);
     }
+
+    private void carwingsLogin() {
+        // Create a new HttpClient and Post Header
+        DefaultHttpClient httpclient = new DefaultHttpClient();
+
+        HttpPost httppost = new HttpPost("https://www.nissanusa.com/owners/j_spring_security_check");
+
+        String user = "";
+        String pass = "";
+
+        try {
+            // Add your data
+            List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
+            nameValuePairs.add(new BasicNameValuePair("j_username", user));
+            nameValuePairs.add(new BasicNameValuePair("j_passwordHolder", "Password"));
+            nameValuePairs.add(new BasicNameValuePair("j_password", pass));
+            httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+
+            // Execute HTTP Post Request
+            HttpResponse response = httpclient.execute(httppost);
+            System.out.println(httpclient.getCookieStore().getCookies().toString());
+
+            DefaultHttpClient httpclient2 = new DefaultHttpClient();
+            httpclient2.setCookieStore(httpclient.getCookieStore());
+            HttpGet httpget = new HttpGet("https://www.nissanusa.com/owners/vehicles/statusRefresh?id=50405");
+            httpclient2.execute(httpget);
+
+            httpclient2 = new DefaultHttpClient();
+            httpclient2.setCookieStore(httpclient.getCookieStore());
+
+            HttpGet httpgetdata = new HttpGet("https://www.nissanusa.com/owners/vehicles/pollStatusRefresh?id=50405");
+            response = httpclient2.execute(httpgetdata);
+
+            InputStream inputStream = response.getEntity().getContent();
+            BufferedReader bufferedReader = new BufferedReader( new InputStreamReader(inputStream));
+            String line = "";
+            String result = "";
+            while((line = bufferedReader.readLine()) != null)
+                result += line;
+
+            inputStream.close();
+
+            System.out.println(response.toString());
+            System.out.println(result);
+
+            try {
+                JSONObject jObject = new JSONObject(result);
+                sendNotification(String.valueOf(jObject.getInt("currentBattery")));
+                System.out.print(jObject.getInt("currentBattery"));
+            } catch (Exception e) {
+                System.out.println(e);
+            }
+
+        } catch (ClientProtocolException e) {
+            // TODO Auto-generated catch block
+            System.out.println(e.toString());
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            System.out.println(e.toString());
+        }
+    }
+
     private void sendNotification(String msg) {
         mNotificationManager = (NotificationManager)
                 this.getSystemService(Context.NOTIFICATION_SERVICE);
