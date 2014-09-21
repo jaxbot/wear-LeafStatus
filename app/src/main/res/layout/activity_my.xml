@@ -12,27 +12,89 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/txtUsername"
-        android:layout_alignParentEnd="true"
         android:hint="username"
-        android:layout_alignParentStart="true" />
+        android:layout_below="@+id/textView3"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="20dp"
+        android:layout_alignEnd="@+id/txtPassword" />
 
     <EditText
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/txtPassword"
         android:hint="password"
-        android:layout_below="@+id/txtUsername"
+        android:password="true"
         android:layout_alignParentStart="true"
-        android:layout_alignEnd="@+id/txtUsername"
-        android:password="true" />
+        android:layout_alignParentEnd="true"
+        android:layout_below="@+id/txtUsername"
+        android:layout_alignParentLeft="true" />
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Save"
         android:id="@+id/button"
+        android:layout_marginTop="11dp"
+        android:layout_below="@+id/seekBar"
+        android:layout_alignParentStart="true"
+        android:layout_alignEnd="@+id/seekBar" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Leaf Status will give a periodically updated notification containing your Leaf's current battery status."
+        android:id="@+id/textView"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="All communication is done between this phone and Nissan's secure servers, so your login credentials should be safe from interception."
+        android:id="@+id/textView2"
+        android:layout_below="@+id/textView"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="31dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Type your username and password below, then press &quot;Save&quot;. That's all there is to it."
+        android:id="@+id/textView3"
+        android:layout_below="@+id/textView2"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="22dp" />
+
+    <SeekBar
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/seekBar"
+        android:max="300"
+        android:progress="30"
+        android:indeterminate="false"
+        android:layout_marginTop="5dp"
+        android:layout_below="@+id/txtMinutes"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="15 minutes"
+        android:id="@+id/txtMinutes"
+        android:layout_marginTop="10dp"
         android:layout_below="@+id/txtPassword"
         android:layout_alignParentStart="true"
-        android:layout_alignEnd="@+id/txtPassword" />
+        android:layout_alignEnd="@+id/seekBar"
+        android:layout_marginLeft="5dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="A project by Jonathan Warner (@Jaxbot). Not affiliated with or supported by Nissan."
+        android:id="@+id/textView4"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentStart="true" />
 
 </RelativeLayout>
