@@ -6,6 +6,7 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.support.v4.app.NotificationCompat;
@@ -14,6 +15,9 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
@@ -44,14 +48,35 @@ public class MyActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my);
 
-            Intent intent = new Intent(this, AlarmReceiver.class);
-            PendingIntent sender = PendingIntent.getBroadcast(this, 2, intent, 0);
-            AlarmManager am = (AlarmManager) getSystemService(ALARM_SERVICE);
-            long l = new Date().getTime();
-            if (l < new Date().getTime()) {
-                l += 10000; // start at next 24 hour
+        Intent intent = new Intent(this, AlarmReceiver.class);
+        PendingIntent sender = PendingIntent.getBroadcast(this, 2, intent, 0);
+        AlarmManager am = (AlarmManager) getSystemService(ALARM_SERVICE);
+        long l = new Date().getTime();
+        if (l < new Date().getTime()) {
+            l += 10000; // start at next 24 hour
+        }
+        am.setRepeating(AlarmManager.RTC_WAKEUP, l, 1000000000, sender); // 86400000
+
+        final Button button = (Button) findViewById(R.id.button);
+        button.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                SharedPreferences settings = getSharedPreferences("U", 0);
+                SharedPreferences.Editor editor = settings.edit();
+
+                String username = ((EditText) findViewById(R.id.txtUsername)).getText().toString();
+                String password = ((EditText) findViewById(R.id.txtPassword)).getText().toString();
+
+                editor.putString("username", username);
+                editor.putString("password", password);
+
+                editor.commit();
             }
-            am.setRepeating(AlarmManager.RTC_WAKEUP, l, 1000000000, sender); // 86400000
+        });
+
+        SharedPreferences settings = getSharedPreferences("U", 0);
+
+        ((EditText) findViewById(R.id.txtUsername)).setText(settings.getString("username", ""));
+        ((EditText) findViewById(R.id.txtPassword)).setText(settings.getString("password", ""));
     }
 
     @Override

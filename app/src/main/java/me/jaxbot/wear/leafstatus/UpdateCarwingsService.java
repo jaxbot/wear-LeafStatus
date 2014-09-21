@@ -6,6 +6,7 @@ import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.IBinder;
@@ -65,15 +66,14 @@ public class UpdateCarwingsService extends Service {
 
         HttpPost httppost = new HttpPost("https://www.nissanusa.com/owners/j_spring_security_check");
 
-        String user = "";
-        String pass = "";
+        SharedPreferences settings = getSharedPreferences("U", 0);
 
         try {
             // Add your data
             List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
-            nameValuePairs.add(new BasicNameValuePair("j_username", user));
+            nameValuePairs.add(new BasicNameValuePair("j_username", settings.getString("username", "")));
             nameValuePairs.add(new BasicNameValuePair("j_passwordHolder", "Password"));
-            nameValuePairs.add(new BasicNameValuePair("j_password", pass));
+            nameValuePairs.add(new BasicNameValuePair("j_password", settings.getString("password", "")));
             httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
 
             // Execute HTTP Post Request
