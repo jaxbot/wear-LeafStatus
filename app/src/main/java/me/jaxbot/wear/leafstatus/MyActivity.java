@@ -1,5 +1,6 @@
 package me.jaxbot.wear.leafstatus;
 
+import android.app.AlarmManager;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -31,120 +32,27 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.CookieStore;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 
 public class MyActivity extends ActionBarActivity {
 
-    private NotificationManager mNotificationManager;
-    NotificationCompat.Builder builder;
-
-    public static final int NOTIFICATION_ID = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my);
 
-        sendNotification("Time till full: 2:30");
-
-        new AsyncTask<Void, Void, Void>() {
-            @Override
-            protected Void doInBackground(Void... params) {
-                carwingsLogin();
-                return null;
+            Intent intent = new Intent(this, AlarmReceiver.class);
+            PendingIntent sender = PendingIntent.getBroadcast(this, 2, intent, 0);
+            AlarmManager am = (AlarmManager) getSystemService(ALARM_SERVICE);
+            long l = new Date().getTime();
+            if (l < new Date().getTime()) {
+                l += 10000; // start at next 24 hour
             }
-        }.execute(null, null, null);
+            am.setRepeating(AlarmManager.RTC_WAKEUP, l, 1000000000, sender); // 86400000
     }
-
-    private void carwingsLogin() {
-        // Create a new HttpClient and Post Header
-        DefaultHttpClient httpclient = new DefaultHttpClient();
-
-        HttpPost httppost = new HttpPost("https://www.nissanusa.com/owners/j_spring_security_check");
-
-        String user = "";
-        String pass = "";
-
-        try {
-            // Add your data
-            List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
-            nameValuePairs.add(new BasicNameValuePair("j_username", user));
-            nameValuePairs.add(new BasicNameValuePair("j_passwordHolder", "Password"));
-            nameValuePairs.add(new BasicNameValuePair("j_password", pass));
-            httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
-
-            // Execute HTTP Post Request
-            HttpResponse response = httpclient.execute(httppost);
-            System.out.println(httpclient.getCookieStore().getCookies().toString());
-
-            DefaultHttpClient httpclient2 = new DefaultHttpClient();
-            httpclient2.setCookieStore(httpclient.getCookieStore());
-            HttpGet httpget = new HttpGet("https://www.nissanusa.com/owners/vehicles/statusRefresh?id=50405");
-            httpclient2.execute(httpget);
-
-            httpclient2 = new DefaultHttpClient();
-            httpclient2.setCookieStore(httpclient.getCookieStore());
-
-            HttpGet httpgetdata = new HttpGet("https://www.nissanusa.com/owners/vehicles/pollStatusRefresh?id=50405");
-            response = httpclient2.execute(httpgetdata);
-
-            InputStream inputStream = response.getEntity().getContent();
-            BufferedReader bufferedReader = new BufferedReader( new InputStreamReader(inputStream));
-            String line = "";
-            String result = "";
-            while((line = bufferedReader.readLine()) != null)
-                result += line;
-
-            inputStream.close();
-
-            System.out.println(response.toString());
-            System.out.println(result);
-
-            try {
-                JSONObject jObject = new JSONObject(result);
-                sendNotification(String.valueOf(jObject.getInt("currentBattery")));
-                System.out.print(jObject.getInt("currentBattery"));
-            } catch (Exception e) {
-                System.out.println(e);
-            }
-
-        } catch (ClientProtocolException e) {
-            // TODO Auto-generated catch block
-            System.out.println(e.toString());
-        } catch (IOException e) {
-            // TODO Auto-generated catch block
-            System.out.println(e.toString());
-        }
-    }
-
-    private void sendNotification(String msg) {
-        mNotificationManager = (NotificationManager)
-                this.getSystemService(Context.NOTIFICATION_SERVICE);
-
-        PendingIntent contentIntent = PendingIntent.getActivity(this, 0,
-                new Intent(this, MyActivity.class), 0);
-
-        // Build an intent for an action to view a map
-        Intent mapIntent = new Intent(Intent.ACTION_VIEW);
-        Uri geoUri = Uri.parse("geo:0,0?q=" + Uri.encode("house"));
-        mapIntent.setData(geoUri);
-        PendingIntent mapPendingIntent =
-                PendingIntent.getActivity(this, 0, mapIntent, 0);
-
-        Notification.Builder mBuilder =
-                new Notification.Builder(this)
-                        .setSmallIcon(R.drawable.abc_ab_bottom_solid_dark_holo)
-                        .setContentTitle("Leaf: 50%")
-                        .setStyle(new Notification.BigTextStyle()
-                                .bigText(msg))
-                        .setContentText(msg)
-                        .addAction(R.drawable.ic_launcher, "Start AC", mapPendingIntent);
-
-        mBuilder.setContentIntent(contentIntent);
-        mNotificationManager.notify(NOTIFICATION_ID, mBuilder.build());
-    }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
