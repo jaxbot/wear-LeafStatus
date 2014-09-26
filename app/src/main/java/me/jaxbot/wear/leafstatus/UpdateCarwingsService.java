@@ -46,7 +46,6 @@ public class UpdateCarwingsService extends Service {
                     sendNotification(carwings.currentBattery, carwings.chargeTime);
                 } else {
                     Log.d(TAG, "Update failed with an exception.");
-                    sendNotification(1, "An exception occurred.");
                 }
                 return null;
             }
