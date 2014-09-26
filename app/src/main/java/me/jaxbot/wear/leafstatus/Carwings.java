@@ -33,6 +33,9 @@ public class Carwings {
     public int currentBattery;
     public String chargeTime;
 
+    // Disgusting, but we're using the web frontend, and thus will pretend
+    String UA = "Mozilla/5.0 (Windows NT 6.3; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/37.0.2049.0 Safari/537.36";
+
     public Carwings(String username, String password)
     {
         this.username = username;
@@ -42,6 +45,7 @@ public class Carwings {
         DefaultHttpClient httpclient = new DefaultHttpClient();
 
         HttpPost httppost = new HttpPost("https://www.nissanusa.com/owners/j_spring_security_check");
+        httppost.setHeader("User-Agent", UA);
 
         try {
             // Add your data
@@ -84,6 +88,7 @@ public class Carwings {
 
             DefaultHttpClient httpclient = new DefaultHttpClient();
             HttpGet httpget = new HttpGet("https://www.nissanusa.com/owners/vehicles/statusRefresh?id=" + carid);
+            httpget.setHeader("User-Agent", UA);
             httpclient.setCookieStore(jar);
             httpclient.execute(httpget);
 
@@ -101,8 +106,9 @@ public class Carwings {
         try {
             DefaultHttpClient httpclient = new DefaultHttpClient();
             HttpGet httpget = new HttpGet(url);
-
+            httpget.setHeader("User-Agent", UA);
             httpclient.setCookieStore(jar);
+
             HttpResponse response = httpclient.execute(httpget);
 
             InputStream inputStream = response.getEntity().getContent();
