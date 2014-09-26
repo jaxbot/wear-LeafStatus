@@ -1,5 +1,6 @@
 package me.jaxbot.wear.leafstatus;
 
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.util.Log;
 
@@ -33,13 +34,16 @@ public class Carwings {
     public int currentBattery;
     public String chargeTime;
 
+    SharedPreferences settings;
+
     // Disgusting, but we're using the web frontend, and thus will pretend
     String UA = "Mozilla/5.0 (Windows NT 6.3; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/37.0.2049.0 Safari/537.36";
 
-    public Carwings(String username, String password)
+    public Carwings(Context context)
     {
-        this.username = username;
-        this.password = password;
+        settings = context.getSharedPreferences("U", 0);
+        this.username = settings.getString("username", "");
+        this.password = settings.getString("password", "");
     }
     private CookieStore login() {
         DefaultHttpClient httpclient = new DefaultHttpClient();
@@ -68,20 +72,32 @@ public class Carwings {
     }
 
     private String getCarId(CookieStore jar) {
+        // Check if we have already grabbed this
+        String cachedCarID = settings.getString("carid", "");
+        if (!cachedCarID.equals(""))
+            return cachedCarID;
+
         // This is a particularly bad and non-future-safe operation,
         // but so is the entire application, since Nissan's API is internal
         String vehicleHTML = getHTTPString("https://www.nissanusa.com/owners/vehicles", jar);
         Pattern pattern = Pattern.compile("(.*)div class=\"vehicleHeader\" id=\"(\\d+)\"(.*)");
         Matcher m = pattern.matcher(vehicleHTML);
         if (m.matches()) {
-            return m.group(2);
+            cachedCarID = m.group(2);
+
+            // Save it, since it is unlikely to change
+            SharedPreferences.Editor editor = settings.edit();
+            editor.putString("carid", cachedCarID);
+            editor.commit();
+
+            return cachedCarID;
         } else {
             Log.e("Leaf", "Failed to find vehicle id");
             return "";
         }
     }
 
-    public void update() {
+    public boolean update() {
         try {
             CookieStore jar = this.login();
             String carid = this.getCarId(jar);
@@ -97,9 +113,21 @@ public class Carwings {
             JSONObject jObject = new JSONObject(result);
             this.currentBattery = jObject.getInt("currentBattery");
             this.chargeTime = jObject.getString("chargeTime");
+
+            return true;
         } catch (Exception e) {
             System.out.println(e);
         }
+
+        return false;
+    }
+
+    public boolean startAC() {
+        CookieStore jar = this.login();
+        String carid = this.getCarId(jar);
+
+
+        return true;
     }
 
     private String getHTTPString(String url, CookieStore jar) {

@@ -26,28 +26,31 @@ public class UpdateCarwingsService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
-        Log.d(TAG, "Intent started!");
+        Log.d(TAG, "Intent created");
+    }
 
-        SharedPreferences settings = getSharedPreferences("U", 0);
-        final Carwings carwings = new Carwings(settings.getString("username", ""), settings.getString("password", ""));
+    @Override
+    public int onStartCommand(Intent intent, int flags, int startId) {
+        Log.d(TAG, "Intent started");
+
+        final Carwings carwings = new Carwings(this);
 
         new AsyncTask<Void, Void, Void>() {
             @Override
             protected Void doInBackground(Void... params) {
                 Log.d(TAG, "Calling carwings update...");
 
-                carwings.update();
+                if (carwings.update()) {
 
-                Log.d(TAG, "Update completed, sending notification.");
-                sendNotification(carwings.currentBattery, carwings.chargeTime);
+                    Log.d(TAG, "Update completed, sending notification.");
+                    sendNotification(carwings.currentBattery, carwings.chargeTime);
+                } else {
+                    Log.d(TAG, "Update failed with an exception.");
+                    sendNotification(1, "An exception occurred.");
+                }
                 return null;
             }
         }.execute(null, null, null);
-    }
-
-    @Override
-    public int onStartCommand(Intent intent, int flags, int startId) {
-        Log.d("Hello", "Sticky!");
 
         return START_STICKY;
     }
@@ -59,24 +62,20 @@ public class UpdateCarwingsService extends Service {
         PendingIntent contentIntent = PendingIntent.getActivity(this, 0,
                 new Intent(this, MyActivity.class), 0);
 
-        // Build an intent for an action to view a map
-        Intent mapIntent = new Intent(Intent.ACTION_VIEW);
-        Uri geoUri = Uri.parse("geo:0,0?q=" + Uri.encode("house"));
-        mapIntent.setData(geoUri);
-        PendingIntent mapPendingIntent =
-                PendingIntent.getActivity(this, 0, mapIntent, 0);
+        Intent acIntent = new Intent(this, StartAC.class);
+        PendingIntent pendingIntentAC = PendingIntent.getBroadcast(this, 0, acIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
         String percent = String.valueOf(((bars * 10) / 12) * 10);
         String msg = chargeTime;
 
         Notification.Builder mBuilder =
-                new Notification.Builder(this)
-                        .setSmallIcon(R.drawable.abc_ab_bottom_solid_dark_holo)
-                        .setContentTitle("Leaf: " + percent + "%")
-                        .setStyle(new Notification.BigTextStyle()
-                                .bigText(msg))
-                        .setContentText(msg)
-                        .addAction(R.drawable.ic_launcher, "Start AC", mapPendingIntent);
+            new Notification.Builder(this)
+                .setSmallIcon(R.drawable.ic_leaf_notification)
+                .setContentTitle("Leaf: " + percent + "%")
+                .setStyle(new Notification.BigTextStyle()
+                    .bigText(msg))
+                .setContentText(msg)
+                .addAction(R.drawable.ic_fan, "Start AC", pendingIntentAC);
 
         mBuilder.setContentIntent(contentIntent);
         mNotificationManager.notify(NOTIFICATION_ID, mBuilder.build());
