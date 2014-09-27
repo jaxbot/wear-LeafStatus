@@ -136,6 +136,9 @@ public class Carwings {
 
     public boolean startAC(boolean desired) {
         CookieStore jar = this.login();
+
+        if (jar == null) return false;
+
         String carid = this.getCarId(jar);
 
         getHTTPString("https://www.nissanusa.com/owners/vehicles/setHvac?id=" + carid + "&fan=" + (desired ? "on" : "off"), jar);
