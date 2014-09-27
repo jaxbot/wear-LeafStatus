@@ -1,9 +1,6 @@
 package me.jaxbot.wear.leafstatus;
 
-import android.app.AlarmManager;
-import android.app.PendingIntent;
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
@@ -12,6 +9,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.SeekBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class MyActivity extends ActionBarActivity {
     @Override
@@ -21,7 +19,7 @@ public class MyActivity extends ActionBarActivity {
 
         final Context context = this;
 
-        Button button = (Button) findViewById(R.id.button);
+        final Button button = (Button) findViewById(R.id.button);
         button.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 SharedPreferences settings = getSharedPreferences("U", 0);
@@ -37,11 +35,11 @@ public class MyActivity extends ActionBarActivity {
 
                 editor.commit();
 
-                Intent intent = new Intent(context, AlarmReceiver.class);
-                PendingIntent sender = PendingIntent.getBroadcast(context, 2, intent, 0);
+                AlarmSetter.setAlarm(context);
 
-                AlarmManager am = (AlarmManager) getSystemService(ALARM_SERVICE);
-                am.setRepeating(AlarmManager.RTC_WAKEUP, 5000, (interval + 15) * 60 * 1000, sender);
+                button.setEnabled(false);
+
+                showToast("Saved, updating vehicle status...");
             }
         });
 
@@ -57,6 +55,7 @@ public class MyActivity extends ActionBarActivity {
             @Override
             public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
                 setProgressText(i);
+                ((Button) findViewById(R.id.button)).setEnabled(true);
             }
 
             @Override
@@ -73,6 +72,14 @@ public class MyActivity extends ActionBarActivity {
 
     private void setProgressText(int interval) {
         ((TextView) findViewById(R.id.txtMinutes)).setText("Update every " + (interval + 15) + " minutes");
+    }
+
+    void showToast(String text)
+    {
+        int duration = Toast.LENGTH_SHORT;
+
+        Toast toast = Toast.makeText(this, text, duration);
+        toast.show();
     }
 }
 
