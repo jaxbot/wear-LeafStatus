@@ -33,6 +33,7 @@ public class Carwings {
 
     public int currentBattery;
     public String chargeTime;
+    public boolean currentHvac;
 
     SharedPreferences settings;
 
@@ -113,6 +114,7 @@ public class Carwings {
             JSONObject jObject = new JSONObject(result);
             this.currentBattery = jObject.getInt("currentBattery");
             this.chargeTime = jObject.getString("chargeTime");
+            this.currentHvac = jObject.getBoolean("currentHvac");
 
             return true;
         } catch (Exception e) {
@@ -122,10 +124,11 @@ public class Carwings {
         return false;
     }
 
-    public boolean startAC() {
+    public boolean startAC(boolean desired) {
         CookieStore jar = this.login();
         String carid = this.getCarId(jar);
 
+        getHTTPString("https://www.nissanusa.com/owners/vehicles/setHvac?id=" + carid + "&fan=" + (desired ? "on" : "off"), jar);
 
         return true;
     }

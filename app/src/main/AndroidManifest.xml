@@ -25,6 +25,7 @@
             android:enabled="true"
             android:exported="true" >
         </receiver>
+        <receiver android:name=".StartAC"/>
 
         <service
             android:name=".UpdateCarwingsService"
