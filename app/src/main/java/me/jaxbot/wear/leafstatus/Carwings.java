@@ -114,6 +114,16 @@ public class Carwings {
             JSONObject jObject = new JSONObject(result);
             this.currentBattery = jObject.getInt("currentBattery");
             this.chargeTime = jObject.getString("chargeTime");
+
+            if (chargeTime.equals("null"))
+                this.chargeTime = jObject.getString("chargeTime220");
+
+            if (chargeTime.equals("null"))
+                this.chargeTime = jObject.getString("chrgDrtn22066Tx");
+
+            if (chargeTime.equals("null"))
+                this.chargeTime = "Unknown";
+
             this.currentHvac = jObject.getBoolean("currentHvac");
 
             return true;
