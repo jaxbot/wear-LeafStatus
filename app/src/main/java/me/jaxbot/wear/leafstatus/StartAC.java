@@ -24,11 +24,16 @@ public class StartAC extends BroadcastReceiver {
             @Override
             protected Void doInBackground(Void... params) {
                 Carwings carwings = new Carwings(context);
+
+                LeafNotification.sendNotification(context, carwings.currentBattery, state, carwings.chargeTime, false);
+
                 if (carwings.startAC(state)) {
                     Log.i(TAG, "AC started.");
                 } else {
                     Log.i(TAG, "StartAC failed, likely due to login.");
                 }
+
+                LeafNotification.sendNotification(context, carwings.currentBattery, state, carwings.chargeTime);
                 return null;
             }
         }.execute(null, null, null);

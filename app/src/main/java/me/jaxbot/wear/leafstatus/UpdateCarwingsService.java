@@ -14,10 +14,7 @@ import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
 public class UpdateCarwingsService extends Service {
-    private NotificationManager mNotificationManager;
-    NotificationCompat.Builder builder;
 
-    public static final int NOTIFICATION_ID = 1;
     public static final String TAG = "UpdateCarwingsService";
 
     public UpdateCarwingsService() {
@@ -34,6 +31,7 @@ public class UpdateCarwingsService extends Service {
         Log.d(TAG, "Intent started");
 
         final Carwings carwings = new Carwings(this);
+        final Context context = this;
 
         new AsyncTask<Void, Void, Void>() {
             @Override
@@ -41,9 +39,8 @@ public class UpdateCarwingsService extends Service {
                 Log.d(TAG, "Calling carwings update...");
 
                 if (carwings.update()) {
-
                     Log.d(TAG, "Update completed, sending notification.");
-                    sendNotification(carwings.currentBattery, carwings.currentHvac, carwings.chargeTime);
+                    LeafNotification.sendNotification(context, carwings.currentBattery, carwings.currentHvac, carwings.chargeTime);
                 } else {
                     Log.d(TAG, "Update failed with an exception.");
                 }
@@ -53,36 +50,6 @@ public class UpdateCarwingsService extends Service {
 
         return START_STICKY;
     }
-
-    private void sendNotification(int bars, boolean currentHvacState, String chargeTime) {
-        mNotificationManager = (NotificationManager)
-            this.getSystemService(Context.NOTIFICATION_SERVICE);
-
-        PendingIntent contentIntent = PendingIntent.getActivity(this, 0,
-            new Intent(this, MyActivity.class), 0);
-
-        Intent acIntent = new Intent(this, StartAC.class);
-        acIntent.putExtra("desiredState", !currentHvacState);
-        PendingIntent pendingIntentAC = PendingIntent.getBroadcast(this, 0, acIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-
-        String acText = currentHvacState ? "Stop AC" : "Start AC";
-
-        String percent = String.valueOf(((bars * 10) / 12) * 10);
-        String msg = chargeTime;
-
-        Notification.Builder mBuilder =
-            new Notification.Builder(this)
-                .setSmallIcon(R.drawable.ic_leaf_notification)
-                .setContentTitle("Leaf: " + percent + "%")
-                .setStyle(new Notification.BigTextStyle()
-                    .bigText(msg))
-                .setContentText(msg)
-                .addAction(R.drawable.ic_fan, acText, pendingIntentAC);
-
-        mBuilder.setContentIntent(contentIntent);
-        mNotificationManager.notify(NOTIFICATION_ID, mBuilder.build());
-    }
-
 
     @Override
     public IBinder onBind(Intent intent) {

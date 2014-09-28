@@ -45,6 +45,8 @@ public class Carwings {
         settings = context.getSharedPreferences("U", 0);
         this.username = settings.getString("username", "");
         this.password = settings.getString("password", "");
+        this.currentBattery = settings.getInt("currentBattery", 0);
+        this.chargeTime = settings.getString("chargeTime", "");
     }
     private CookieStore login() {
         DefaultHttpClient httpclient = new DefaultHttpClient();
@@ -125,6 +127,11 @@ public class Carwings {
                 this.chargeTime = "Unknown";
 
             this.currentHvac = jObject.getBoolean("currentHvac");
+
+            SharedPreferences.Editor editor = settings.edit();
+            editor.putString("chargeTime", this.chargeTime);
+            editor.putInt("currentBattery", this.currentBattery);
+            editor.commit();
 
             return true;
         } catch (Exception e) {
