@@ -4,6 +4,9 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -48,16 +51,40 @@ public class MyActivity extends ActionBarActivity {
         SharedPreferences settings = getSharedPreferences("U", 0);
 
         int interval = settings.getInt("interval", 30);
-        ((EditText) findViewById(R.id.txtUsername)).setText(settings.getString("username", ""));
-        ((EditText) findViewById(R.id.txtPassword)).setText(settings.getString("password", ""));
-        ((SeekBar) findViewById(R.id.seekBar)).setProgress(interval);
+        EditText txtUsername = (EditText)findViewById(R.id.txtUsername);
+        EditText txtPassword = (EditText)findViewById(R.id.txtPassword);
+        SeekBar seekbar = (SeekBar)findViewById(R.id.seekBar);
+
+        txtUsername.setText(settings.getString("username", ""));
+        txtPassword.setText(settings.getString("password", ""));
+        seekbar.setProgress(interval);
         setProgressText(interval);
 
-        ((SeekBar) findViewById(R.id.seekBar)).setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+        TextWatcher watcher = new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i2, int i3) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i2, int i3) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                findViewById(R.id.button).setEnabled(true);
+            }
+        };
+
+        txtUsername.addTextChangedListener(watcher);
+        txtPassword.addTextChangedListener(watcher);
+
+        seekbar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
                 setProgressText(i);
-                ((Button) findViewById(R.id.button)).setEnabled(true);
+                findViewById(R.id.button).setEnabled(true);
             }
 
             @Override
