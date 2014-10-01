@@ -13,6 +13,9 @@ public class AlarmSetter {
     public static void setAlarm(Context context)
     {
         SharedPreferences settings = context.getSharedPreferences("U", 0);
+
+        if (!settings.getBoolean("autoupdate", true)) return;
+
         Intent intent = new Intent(context, AlarmReceiver.class);
         PendingIntent sender = PendingIntent.getBroadcast(context, 2, intent, 0);
 
