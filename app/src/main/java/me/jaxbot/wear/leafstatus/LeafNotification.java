@@ -29,7 +29,7 @@ public class LeafNotification {
         acIntent.putExtra("desiredState", !currentHvacState);
         PendingIntent pendingIntentAC = PendingIntent.getBroadcast(context, 0, acIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
-        String acText = currentHvacState ? "Stop AC" : "Start AC";
+        String acText = currentHvacState ? "Stop HVAC" : "Start HVAC";
 
         String percent = String.valueOf(((bars * 10) / 12) * 10);
         String msg = chargeTime;

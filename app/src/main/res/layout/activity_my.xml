@@ -32,12 +32,13 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Save"
+        android:text="Save and Update"
         android:id="@+id/button"
-        android:layout_marginTop="11dp"
+        android:layout_marginTop="10dp"
         android:layout_below="@+id/seekBar"
         android:layout_alignParentStart="true"
         android:layout_alignEnd="@+id/seekBar" />
+
 
     <TextView
         android:layout_width="wrap_content"
@@ -72,7 +73,7 @@
         android:max="300"
         android:progress="30"
         android:indeterminate="false"
-        android:layout_marginTop="5dp"
+        android:layout_marginTop="10dp"
         android:layout_below="@+id/txtMinutes"
         android:layout_alignParentStart="true"
         android:layout_alignParentEnd="true" />
@@ -84,7 +85,7 @@
         android:text="15 minutes"
         android:id="@+id/txtMinutes"
         android:layout_marginTop="10dp"
-        android:layout_below="@+id/txtPassword"
+        android:layout_below="@+id/checkBox"
         android:layout_alignParentStart="true"
         android:layout_alignEnd="@+id/seekBar"
         android:layout_marginLeft="5dp" />
@@ -96,5 +97,15 @@
         android:id="@+id/textView4"
         android:layout_alignParentBottom="true"
         android:layout_alignParentStart="true" />
+
+    <CheckBox
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Auto-update"
+        android:id="@+id/checkBox"
+        android:layout_alignStart="@+id/txtMinutes"
+        android:layout_marginTop="0dp"
+        android:layout_alignEnd="@+id/txtPassword"
+        android:layout_below="@+id/txtPassword" />
 
 </RelativeLayout>

@@ -1,6 +1,7 @@
 package me.jaxbot.wear.leafstatus;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
@@ -11,6 +12,8 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.SeekBar;
 import android.widget.TextView;
@@ -33,14 +36,23 @@ public class MyActivity extends ActionBarActivity {
                 String username = ((EditText) findViewById(R.id.txtUsername)).getText().toString();
                 String password = ((EditText) findViewById(R.id.txtPassword)).getText().toString();
                 int interval = ((SeekBar) findViewById(R.id.seekBar)).getProgress();
+                boolean checked = ((CheckBox) findViewById(R.id.checkBox)).isChecked();
 
                 editor.putString("username", username);
                 editor.putString("password", password);
                 editor.putInt("interval", interval);
+                editor.putBoolean("autoupdate", checked);
 
                 editor.commit();
 
-                AlarmSetter.setAlarm(context);
+                if (checked)
+                    AlarmSetter.setAlarm(context);
+                else
+                {
+                    AlarmSetter.cancelAlarm(context);
+                    Intent service = new Intent(context, UpdateCarwingsService.class);
+                    context.startService(service);
+                }
 
                 button.setEnabled(false);
 
@@ -53,7 +65,7 @@ public class MyActivity extends ActionBarActivity {
         int interval = settings.getInt("interval", 30);
         EditText txtUsername = (EditText)findViewById(R.id.txtUsername);
         EditText txtPassword = (EditText)findViewById(R.id.txtPassword);
-        SeekBar seekbar = (SeekBar)findViewById(R.id.seekBar);
+        final SeekBar seekbar = (SeekBar)findViewById(R.id.seekBar);
 
         txtUsername.setText(settings.getString("username", ""));
         txtPassword.setText(settings.getString("password", ""));
@@ -97,6 +109,16 @@ public class MyActivity extends ActionBarActivity {
 
             }
         });
+
+        CheckBox checkbox = ((CheckBox)(findViewById(R.id.checkBox)));
+        checkbox.setChecked(settings.getBoolean("autoupdate", true));
+        checkbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                findViewById(R.id.button).setEnabled(true);
+                seekbar.setEnabled(b);
+            }
+        });
     }
 
     private void setProgressText(int interval) {
@@ -105,7 +127,7 @@ public class MyActivity extends ActionBarActivity {
 
     void showToast(String text)
     {
-        int duration = Toast.LENGTH_SHORT;
+        int duration = Toast.LENGTH_LONG;
 
         Toast toast = Toast.makeText(this, text, duration);
         toast.show();
