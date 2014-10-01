@@ -23,6 +23,16 @@ public class MyActivity extends ActionBarActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        final SharedPreferences settings = getSharedPreferences("U", 0);
+        if (settings.getString("username", "").equals("") || true) {
+            Intent intent = new Intent(this, LoginActivity.class);
+            startActivity(intent);
+
+            if (settings.getString("username", "").equals("") || true)
+                finish();
+        }
+
         setContentView(R.layout.activity_my);
 
         final Context context = this;
@@ -30,7 +40,7 @@ public class MyActivity extends ActionBarActivity {
         final Button button = (Button) findViewById(R.id.button);
         button.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                SharedPreferences settings = getSharedPreferences("U", 0);
+
                 SharedPreferences.Editor editor = settings.edit();
 
                 String username = ((EditText) findViewById(R.id.txtUsername)).getText().toString();
@@ -59,8 +69,6 @@ public class MyActivity extends ActionBarActivity {
                 showToast("Saved, updating vehicle status...");
             }
         });
-
-        SharedPreferences settings = getSharedPreferences("U", 0);
 
         int interval = settings.getInt("interval", 30);
         EditText txtUsername = (EditText)findViewById(R.id.txtUsername);

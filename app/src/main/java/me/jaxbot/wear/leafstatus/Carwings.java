@@ -74,6 +74,10 @@ public class Carwings {
         return null;
     }
 
+    public boolean trylogin() {
+        return !getCarId(login()).equals("");
+    }
+
     private String getCarId(CookieStore jar) {
         // Check if we have already grabbed this
         String cachedCarID = settings.getString("carid", "");
