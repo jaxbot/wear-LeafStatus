@@ -69,6 +69,8 @@ public class LoginActivity extends Activity {
                         Carwings carwings = new Carwings(context);
 
                         if (carwings.trylogin()) {
+                            Intent intent = new Intent(context, MyActivity.class);
+                            startActivity(intent);
                             finish();
                         } else {
 

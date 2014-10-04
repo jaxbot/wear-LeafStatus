@@ -27,12 +27,10 @@ public class MyActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
 
         final SharedPreferences settings = getSharedPreferences("U", 0);
-        if (settings.getString("username", "").equals("") || true) {
+        if (settings.getString("username", "").equals("")) {
             Intent intent = new Intent(this, LoginActivity.class);
             startActivity(intent);
-
-            if (settings.getString("username", "").equals("") || true)
-                finish();
+            finish();
         }
 
         setContentView(R.layout.activity_my);
@@ -166,6 +164,19 @@ public class MyActivity extends ActionBarActivity {
         int id = item.getItemId();
         if (id == R.id.action_settings) {
             return true;
+        }
+        if (id == R.id.action_signout) {
+            SharedPreferences settings = getSharedPreferences("U", 0);
+            SharedPreferences.Editor editor = settings.edit();
+
+            editor.putString("username", "");
+            editor.putString("password", "");
+
+            editor.commit();
+
+            Intent intent = new Intent(this, LoginActivity.class);
+            startActivity(intent);
+            finish();
         }
         return super.onOptionsItemSelected(item);
     }
