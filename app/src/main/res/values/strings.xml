@@ -7,4 +7,8 @@
     <string name="title_activity_login">LoginActivity</string>
     <string name="title_activity_settings">Settings</string>
 
+    <string-array name="supported_countries">
+        <item>United States</item>
+        <item>Canada</item>
+    </string-array>
 </resources>

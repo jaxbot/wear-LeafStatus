@@ -28,12 +28,21 @@ import java.util.regex.Pattern;
  * Created by jonathan on 9/21/14.
  */
 public class Carwings {
+
+    public static String[] PortalURL = {
+        "https://www.nissanusa.com/", // US
+        "https://carwings.mynissan.ca/" // CA
+    };
+
     private String username;
     private String password;
 
     public int currentBattery;
     public String chargeTime;
     public boolean currentHvac;
+
+    // Endpoint url for this instance
+    String url;
 
     SharedPreferences settings;
 
@@ -47,11 +56,14 @@ public class Carwings {
         this.password = settings.getString("password", "");
         this.currentBattery = settings.getInt("currentBattery", 0);
         this.chargeTime = settings.getString("chargeTime", "");
+        this.url = PortalURL[settings.getInt("portal", 0)];
+
+        Log.i("portal", String.valueOf(settings.getInt("portal", 0)));
     }
     private CookieStore login() {
         DefaultHttpClient httpclient = new DefaultHttpClient();
 
-        HttpPost httppost = new HttpPost("https://www.nissanusa.com/owners/j_spring_security_check");
+        HttpPost httppost = new HttpPost(url + "owners/j_spring_security_check");
         httppost.setHeader("User-Agent", UA);
 
         try {
@@ -86,7 +98,7 @@ public class Carwings {
 
         // This is a particularly bad and non-future-safe operation,
         // but so is the entire application, since Nissan's API is internal
-        String vehicleHTML = getHTTPString("https://www.nissanusa.com/owners/vehicles", jar);
+        String vehicleHTML = getHTTPString(url + "owners/vehicles", jar);
         Pattern pattern = Pattern.compile("(.*)div class=\"vehicleHeader\" id=\"(\\d+)\"(.*)");
         Matcher m = pattern.matcher(vehicleHTML);
         if (m.matches()) {
@@ -110,12 +122,12 @@ public class Carwings {
             String carid = this.getCarId(jar);
 
             DefaultHttpClient httpclient = new DefaultHttpClient();
-            HttpGet httpget = new HttpGet("https://www.nissanusa.com/owners/vehicles/statusRefresh?id=" + carid);
+            HttpGet httpget = new HttpGet(url + "owners/vehicles/statusRefresh?id=" + carid);
             httpget.setHeader("User-Agent", UA);
             httpclient.setCookieStore(jar);
             httpclient.execute(httpget);
 
-            String result = getHTTPString("https://www.nissanusa.com/owners/vehicles/pollStatusRefresh?id=" + carid, jar);
+            String result = getHTTPString(url + "owners/vehicles/pollStatusRefresh?id=" + carid, jar);
 
             JSONObject jObject = new JSONObject(result);
             this.currentBattery = jObject.getInt("currentBattery");
@@ -152,7 +164,7 @@ public class Carwings {
 
         String carid = this.getCarId(jar);
 
-        getHTTPString("https://www.nissanusa.com/owners/vehicles/setHvac?id=" + carid + "&fan=" + (desired ? "on" : "off"), jar);
+        getHTTPString(url + "owners/vehicles/setHvac?id=" + carid + "&fan=" + (desired ? "on" : "off"), jar);
 
         return true;
     }

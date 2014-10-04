@@ -13,6 +13,7 @@
         android:layout_height="wrap_content"
         android:id="@+id/txtUsername"
         android:hint="carwings username"
+        android:layout_alignParentEnd="true"
         android:layout_alignParentStart="true"
         android:layout_marginTop="20dp"
         android:layout_alignEnd="@+id/txtPassword" />
@@ -23,8 +24,8 @@
         android:id="@+id/txtPassword"
         android:hint="carwings password"
         android:password="true"
-        android:layout_alignParentStart="true"
         android:layout_alignParentEnd="true"
+        android:layout_alignParentStart="true"
         android:layout_below="@+id/txtUsername"
         android:layout_alignParentLeft="true" />
 
@@ -33,7 +34,7 @@
         android:layout_height="wrap_content"
         android:text="Sign In"
         android:id="@+id/button_signin"
-        android:layout_below="@+id/txtPassword"
+        android:layout_below="@+id/spinner"
         android:layout_alignParentEnd="true"
         android:layout_alignParentStart="true" />
 
@@ -45,7 +46,7 @@
         android:id="@+id/textView"
         android:layout_alignParentStart="true"
         android:layout_marginTop="20dp"
-        android:layout_below="@id/button_signin"/>
+        android:layout_below="@+id/button_signin" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -64,4 +65,13 @@
         android:layout_alignParentStart="true"
         android:layout_below="@+id/textView2"
         android:layout_marginTop="22dp" />
+
+    <Spinner
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/spinner"
+        android:layout_below="@+id/txtPassword"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
+        android:spinnerMode="dialog" />
 </RelativeLayout>
