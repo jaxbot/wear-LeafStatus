@@ -163,18 +163,7 @@ public class MyActivity extends ActionBarActivity {
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
         if (id == R.id.action_settings) {
-            return true;
-        }
-        if (id == R.id.action_signout) {
-            SharedPreferences settings = getSharedPreferences("U", 0);
-            SharedPreferences.Editor editor = settings.edit();
-
-            editor.putString("username", "");
-            editor.putString("password", "");
-
-            editor.commit();
-
-            Intent intent = new Intent(this, LoginActivity.class);
+            Intent intent = new Intent(this, Settings.class);
             startActivity(intent);
             finish();
         }

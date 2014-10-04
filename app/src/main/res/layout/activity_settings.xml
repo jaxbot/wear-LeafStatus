@@ -8,9 +8,12 @@
     android:paddingBottom="@dimen/activity_vertical_margin"
     tools:context="me.jaxbot.wear.leafstatus.Settings">
 
-    <TextView
-        android:text="@string/hello_world"
+    <Button
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
-
+        android:layout_height="wrap_content"
+        android:text="Sign Off"
+        android:id="@+id/button_signoff"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true" />
 </RelativeLayout>
