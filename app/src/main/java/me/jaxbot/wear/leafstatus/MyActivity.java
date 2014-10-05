@@ -43,16 +43,11 @@ public class MyActivity extends ActionBarActivity {
         final Button button = (Button) findViewById(R.id.button);
         button.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-
                 SharedPreferences.Editor editor = settings.edit();
 
-                String username = ((EditText) findViewById(R.id.txtUsername)).getText().toString();
-                String password = ((EditText) findViewById(R.id.txtPassword)).getText().toString();
                 int interval = ((SeekBar) findViewById(R.id.seekBar)).getProgress();
                 boolean checked = ((CheckBox) findViewById(R.id.checkBox)).isChecked();
 
-                editor.putString("username", username);
-                editor.putString("password", password);
                 editor.putInt("interval", interval);
                 editor.putBoolean("autoupdate", checked);
 
@@ -74,34 +69,10 @@ public class MyActivity extends ActionBarActivity {
         });
 
         int interval = settings.getInt("interval", 30);
-        EditText txtUsername = (EditText)findViewById(R.id.txtUsername);
-        EditText txtPassword = (EditText)findViewById(R.id.txtPassword);
         final SeekBar seekbar = (SeekBar)findViewById(R.id.seekBar);
 
-        txtUsername.setText(settings.getString("username", ""));
-        txtPassword.setText(settings.getString("password", ""));
         seekbar.setProgress(interval);
         setProgressText(interval);
-
-        TextWatcher watcher = new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i2, int i3) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i2, int i3) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) {
-                findViewById(R.id.button).setEnabled(true);
-            }
-        };
-
-        txtUsername.addTextChangedListener(watcher);
-        txtPassword.addTextChangedListener(watcher);
 
         seekbar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
@@ -130,6 +101,11 @@ public class MyActivity extends ActionBarActivity {
                 seekbar.setEnabled(b);
             }
         });
+
+        Carwings carwings = new Carwings(this);
+        ((TextView) findViewById(R.id.battery_bars)).setText(carwings.currentBattery);
+        ((TextView) findViewById(R.id.chargetime)).setText(carwings.chargeTime);
+        ((TextView) findViewById(R.id.range)).setText(carwings.currentBattery);
     }
 
     private void setProgressText(int interval) {
@@ -143,8 +119,6 @@ public class MyActivity extends ActionBarActivity {
         Toast toast = Toast.makeText(this, text, duration);
         toast.show();
     }
-
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

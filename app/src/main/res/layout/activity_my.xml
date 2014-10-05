@@ -25,10 +25,10 @@
         android:max="300"
         android:progress="30"
         android:indeterminate="false"
-        android:layout_marginTop="10dp"
-        android:layout_below="@+id/txtMinutes"
         android:layout_alignParentStart="true"
-        android:layout_alignParentEnd="true" />
+        android:layout_alignParentEnd="true"
+        android:layout_above="@+id/txtMinutes"
+        android:layout_alignParentLeft="true" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -36,11 +36,9 @@
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:text="15 minutes"
         android:id="@+id/txtMinutes"
-        android:layout_marginTop="10dp"
-        android:layout_below="@+id/checkBox"
+        android:layout_above="@+id/button"
         android:layout_alignParentStart="true"
-        android:layout_alignEnd="@+id/seekBar"
-        android:layout_marginLeft="5dp" />
+        android:layout_marginBottom="66dp" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -55,9 +53,40 @@
         android:layout_height="wrap_content"
         android:text="Auto-update"
         android:id="@+id/checkBox"
-        android:layout_alignStart="@+id/txtMinutes"
-        android:layout_marginTop="0dp"
-        android:layout_alignEnd="@+id/txtPassword"
-        android:layout_below="@+id/txtPassword" />
+        android:layout_above="@+id/seekBar"
+        android:layout_alignParentStart="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="9 /12 bars"
+        android:id="@+id/battery_bars"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignEnd="@+id/seekBar"
+        android:textAlignment="center" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="38 miles"
+        android:id="@+id/range"
+        android:layout_below="@+id/battery_bars"
+        android:layout_alignParentStart="true"
+        android:textAlignment="center"
+        android:layout_alignEnd="@+id/battery_bars" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="2 hr 30 min"
+        android:id="@+id/chargetime"
+        android:layout_below="@+id/range"
+        android:layout_alignParentStart="true"
+        android:textAlignment="center"
+        android:layout_alignEnd="@+id/range" />
 
 </RelativeLayout>
