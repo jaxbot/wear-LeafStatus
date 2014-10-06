@@ -1,11 +1,13 @@
 package me.jaxbot.wear.leafstatus;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.os.AsyncTask;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.text.Editable;
@@ -58,9 +60,8 @@ public class MyActivity extends ActionBarActivity {
                 else
                 {
                     AlarmSetter.cancelAlarm(context);
-                    Intent service = new Intent(context, UpdateCarwingsService.class);
-                    context.startService(service);
                 }
+                updateCarStatusAsync();
 
                 button.setEnabled(false);
 
@@ -103,9 +104,45 @@ public class MyActivity extends ActionBarActivity {
         });
 
         Carwings carwings = new Carwings(this);
+        if (carwings.lastUpdateTime.equals("")) {
+            updateCarStatusAsync();
+        } else {
+            updateCarStatusUI(carwings);
+        }
+    }
+
+    void updateCarStatusAsync()
+    {
+        (findViewById(R.id.progressBar)).setVisibility(View.VISIBLE);
+
+        final Context context = this;
+        final Activity activity = this;
+
+        new AsyncTask<Void, Void, Void>() {
+            @Override
+            protected Void doInBackground(Void... params) {
+                final Carwings carwings = new Carwings(context);
+
+                carwings.update();
+                LeafNotification.sendNotification(context, carwings.currentBattery, carwings.currentHvac, carwings.chargeTime, carwings.range);
+
+                activity.runOnUiThread(new Runnable() {
+                    public void run() {
+                        updateCarStatusUI(carwings);
+                    }
+                });
+                return null;
+            }
+        }.execute(null, null, null);
+    }
+
+    void updateCarStatusUI(Carwings carwings)
+    {
+        (findViewById(R.id.progressBar)).setVisibility(View.GONE);
         ((TextView) findViewById(R.id.battery_bars)).setText(carwings.currentBattery);
         ((TextView) findViewById(R.id.chargetime)).setText(carwings.chargeTime);
         ((TextView) findViewById(R.id.range)).setText(carwings.range);
+        ((TextView) findViewById(R.id.lastupdated)).setText(carwings.lastUpdateTime);
     }
 
     private void setProgressText(int interval) {

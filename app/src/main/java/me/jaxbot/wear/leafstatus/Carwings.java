@@ -3,6 +3,7 @@ package me.jaxbot.wear.leafstatus;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.util.Log;
+import android.text.format.Time;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
@@ -41,6 +42,7 @@ public class Carwings {
     public String range;
     public String chargeTime;
     public boolean currentHvac;
+    public String lastUpdateTime;
 
     // Endpoint url for this instance
     String url;
@@ -58,6 +60,7 @@ public class Carwings {
         this.currentBattery = settings.getInt("currentBattery", 0);
         this.chargeTime = settings.getString("chargeTime", "");
         this.range = settings.getString("range", "");
+        this.lastUpdateTime = settings.getString("lastupdate", "");
         this.url = PortalURL[settings.getInt("portal", 0)];
 
         Log.i("portal", String.valueOf(settings.getInt("portal", 0)));
@@ -152,9 +155,14 @@ public class Carwings {
             else
                 this.range = range_km + " km";
 
+            Time today = new Time(Time.getCurrentTimezone());
+            today.setToNow();
+            this.lastUpdateTime = today.format("%Y%m%dT%H%M%S");
+
             SharedPreferences.Editor editor = settings.edit();
             editor.putString("range", this.range);
             editor.putString("chargeTime", this.chargeTime);
+            editor.putString("lastupdate", this.lastUpdateTime);
             editor.putInt("currentBattery", this.currentBattery);
             editor.commit();
 

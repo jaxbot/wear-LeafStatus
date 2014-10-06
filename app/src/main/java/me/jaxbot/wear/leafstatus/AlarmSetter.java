@@ -20,7 +20,7 @@ public class AlarmSetter {
         PendingIntent sender = PendingIntent.getBroadcast(context, 2, intent, 0);
 
         AlarmManager am = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-        am.setRepeating(AlarmManager.RTC_WAKEUP, 100, (settings.getInt("interval", 0) + 15) * 60 * 1000, sender);
+        am.setRepeating(AlarmManager.RTC_WAKEUP, 2 * 60 * 1000, (settings.getInt("interval", 0) + 15) * 60 * 1000, sender);
 
     }
 
