@@ -105,7 +105,7 @@ public class MyActivity extends ActionBarActivity {
         Carwings carwings = new Carwings(this);
         ((TextView) findViewById(R.id.battery_bars)).setText(carwings.currentBattery);
         ((TextView) findViewById(R.id.chargetime)).setText(carwings.chargeTime);
-        ((TextView) findViewById(R.id.range)).setText(carwings.currentBattery);
+        ((TextView) findViewById(R.id.range)).setText(carwings.range);
     }
 
     private void setProgressText(int interval) {

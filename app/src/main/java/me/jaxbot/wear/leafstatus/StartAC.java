@@ -25,7 +25,7 @@ public class StartAC extends BroadcastReceiver {
             protected Void doInBackground(Void... params) {
                 Carwings carwings = new Carwings(context);
 
-                LeafNotification.sendNotification(context, carwings.currentBattery, state, carwings.chargeTime, false);
+                LeafNotification.sendNotification(context, carwings.currentBattery, state, carwings.chargeTime, carwings.range, false);
 
                 if (carwings.startAC(state)) {
                     Log.i(TAG, "AC started.");
@@ -33,7 +33,7 @@ public class StartAC extends BroadcastReceiver {
                     Log.i(TAG, "StartAC failed, likely due to login.");
                 }
 
-                LeafNotification.sendNotification(context, carwings.currentBattery, state, carwings.chargeTime);
+                LeafNotification.sendNotification(context, carwings.currentBattery, state, carwings.chargeTime, carwings.range);
                 return null;
             }
         }.execute(null, null, null);

@@ -38,6 +38,7 @@ public class Carwings {
     private String password;
 
     public int currentBattery;
+    public String range;
     public String chargeTime;
     public boolean currentHvac;
 
@@ -56,6 +57,7 @@ public class Carwings {
         this.password = settings.getString("password", "");
         this.currentBattery = settings.getInt("currentBattery", 0);
         this.chargeTime = settings.getString("chargeTime", "");
+        this.range = settings.getString("range", "");
         this.url = PortalURL[settings.getInt("portal", 0)];
 
         Log.i("portal", String.valueOf(settings.getInt("portal", 0)));
@@ -144,7 +146,14 @@ public class Carwings {
 
             this.currentHvac = jObject.getBoolean("currentHvac");
 
+            int range_km = jObject.getInt("rangeHvacOff") / 1000;
+            if (settings.getBoolean("usemiles", true))
+                this.range = (range_km * 0.621371) + " mi";
+            else
+                this.range = range_km + " km";
+
             SharedPreferences.Editor editor = settings.edit();
+            editor.putString("range", this.range);
             editor.putString("chargeTime", this.chargeTime);
             editor.putInt("currentBattery", this.currentBattery);
             editor.commit();

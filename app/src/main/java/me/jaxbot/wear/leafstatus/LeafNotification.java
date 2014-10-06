@@ -14,11 +14,11 @@ public class LeafNotification {
 
     public static final int NOTIFICATION_ID = 1;
 
-    public static void sendNotification(Context context, int bars, boolean currentHvacState, String chargeTime) {
-        sendNotification(context, bars, currentHvacState, chargeTime, true);
+    public static void sendNotification(Context context, int bars, boolean currentHvacState, String chargeTime, String range) {
+        sendNotification(context, bars, currentHvacState, chargeTime, range, true);
     }
 
-    public static void sendNotification(Context context, int bars, boolean currentHvacState, String chargeTime, boolean showACControls) {
+    public static void sendNotification(Context context, int bars, boolean currentHvacState, String chargeTime, String range, boolean showACControls) {
         NotificationManager mNotificationManager = (NotificationManager)
             context.getSystemService(Context.NOTIFICATION_SERVICE);
 
@@ -32,7 +32,7 @@ public class LeafNotification {
         String acText = currentHvacState ? "Stop HVAC" : "Start HVAC";
 
         String percent = String.valueOf(((bars * 10) / 12) * 10);
-        String msg = chargeTime;
+        String msg = chargeTime + " till charged, " + range + " range";
 
         Notification.Builder mBuilder =
             new Notification.Builder(context)
