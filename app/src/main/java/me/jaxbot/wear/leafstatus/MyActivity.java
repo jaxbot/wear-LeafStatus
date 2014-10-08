@@ -104,6 +104,7 @@ public class MyActivity extends ActionBarActivity {
         });
 
         Carwings carwings = new Carwings(this);
+        LeafNotification.sendNotification(context, carwings);
         if (carwings.lastUpdateTime.equals("")) {
             updateCarStatusAsync();
         } else {
@@ -124,7 +125,7 @@ public class MyActivity extends ActionBarActivity {
                 final Carwings carwings = new Carwings(context);
 
                 carwings.update();
-                LeafNotification.sendNotification(context, carwings.currentBattery, carwings.currentHvac, carwings.chargeTime, carwings.range);
+                LeafNotification.sendNotification(context, carwings);
 
                 activity.runOnUiThread(new Runnable() {
                     public void run() {
@@ -139,7 +140,7 @@ public class MyActivity extends ActionBarActivity {
     void updateCarStatusUI(Carwings carwings)
     {
         (findViewById(R.id.progressBar)).setVisibility(View.GONE);
-        ((TextView) findViewById(R.id.battery_bars)).setText(carwings.currentBattery);
+        ((TextView) findViewById(R.id.battery_bars)).setText(carwings.currentBattery + " / 12 bars");
         ((TextView) findViewById(R.id.chargetime)).setText(carwings.chargeTime);
         ((TextView) findViewById(R.id.range)).setText(carwings.range);
         ((TextView) findViewById(R.id.lastupdated)).setText(carwings.lastUpdateTime);

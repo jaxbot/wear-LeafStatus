@@ -14,11 +14,11 @@ public class LeafNotification {
 
     public static final int NOTIFICATION_ID = 1;
 
-    public static void sendNotification(Context context, int bars, boolean currentHvacState, String chargeTime, String range) {
-        sendNotification(context, bars, currentHvacState, chargeTime, range, true);
+    public static void sendNotification(Context context, Carwings carwings) {
+        sendNotification(context, carwings, true);
     }
 
-    public static void sendNotification(Context context, int bars, boolean currentHvacState, String chargeTime, String range, boolean showACControls) {
+    public static void sendNotification(Context context, Carwings carwings, boolean showACControls) {
         NotificationManager mNotificationManager = (NotificationManager)
             context.getSystemService(Context.NOTIFICATION_SERVICE);
 
@@ -26,17 +26,21 @@ public class LeafNotification {
             new Intent(context, MyActivity.class), 0);
 
         Intent acIntent = new Intent(context, StartAC.class);
-        acIntent.putExtra("desiredState", !currentHvacState);
+        acIntent.putExtra("desiredState", !carwings.currentHvac);
         PendingIntent pendingIntentAC = PendingIntent.getBroadcast(context, 0, acIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
-        String acText = currentHvacState ? "Stop HVAC" : "Start HVAC";
+        String acText = carwings.currentHvac ? "Stop HVAC" : "Start HVAC";
 
-        String msg = chargeTime + "till charged";
+        String msg;
+        if (carwings.charging)
+            msg = "Charging, " + carwings.chargeTime + "till charged [" + carwings.chargerType + "]";
+        else
+            msg = carwings.chargeTime + "to charge";
 
         Notification.Builder mBuilder =
             new Notification.Builder(context)
                 .setSmallIcon(R.drawable.ic_leaf_notification)
-                .setContentTitle("Leaf: " + bars + " / 12, " + range)
+                .setContentTitle("Leaf: " + carwings.currentBattery + "/12, " + carwings.range)
                 .setStyle(new Notification.BigTextStyle()
                     .bigText(msg))
                 .setContentText(msg);

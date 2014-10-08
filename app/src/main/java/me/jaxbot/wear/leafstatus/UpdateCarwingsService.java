@@ -40,7 +40,7 @@ public class UpdateCarwingsService extends Service {
 
                 if (carwings.update()) {
                     Log.d(TAG, "Update completed, sending notification.");
-                    LeafNotification.sendNotification(context, carwings.currentBattery, carwings.currentHvac, carwings.chargeTime, carwings.range);
+                    LeafNotification.sendNotification(context, carwings);
                 } else {
                     Log.d(TAG, "Update failed with an exception.");
                 }

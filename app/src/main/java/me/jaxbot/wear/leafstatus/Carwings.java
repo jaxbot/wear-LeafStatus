@@ -43,6 +43,8 @@ public class Carwings {
     public String chargeTime;
     public boolean currentHvac;
     public String lastUpdateTime;
+    public String chargerType;
+    public boolean charging;
 
     // Endpoint url for this instance
     String url;
@@ -62,6 +64,8 @@ public class Carwings {
         this.range = settings.getString("range", "");
         this.lastUpdateTime = settings.getString("lastupdate", "");
         this.url = PortalURL[settings.getInt("portal", 0)];
+        this.chargerType = settings.getString("charger", "L1");
+        this.charging = settings.getBoolean("charging", false);
 
         Log.i("portal", String.valueOf(settings.getInt("portal", 0)));
     }
@@ -137,17 +141,25 @@ public class Carwings {
             JSONObject jObject = new JSONObject(result);
             this.currentBattery = jObject.getInt("currentBattery");
             this.chargeTime = jObject.getString("chargeTime");
+            this.chargerType = "L1";
 
-            if (chargeTime.equals("null"))
+            if (chargeTime.equals("null")) {
                 this.chargeTime = jObject.getString("chargeTime220");
+                this.chargerType = "L2";
+            }
 
-            if (chargeTime.equals("null"))
+            if (chargeTime.equals("null")) {
                 this.chargeTime = jObject.getString("chrgDrtn22066Tx");
+                this.chargerType = "L3";
+            }
 
-            if (chargeTime.equals("null"))
+            if (chargeTime.equals("null")) {
                 this.chargeTime = "Unknown";
+                this.chargerType = "?";
+            }
 
             this.currentHvac = jObject.getBoolean("currentHvac");
+            this.charging = !jObject.getString("currentCharging").equals("NOT_CHARGING");
 
             int range_km = jObject.getInt("rangeHvacOff") / 1000;
             if (settings.getBoolean("usemiles", true))
@@ -157,11 +169,13 @@ public class Carwings {
 
             Time today = new Time(Time.getCurrentTimezone());
             today.setToNow();
-            this.lastUpdateTime = today.format("%Y%m%dT%H%M%S");
+            this.lastUpdateTime = today.format("%Y-%m-%d %H:%M:%S");
 
             SharedPreferences.Editor editor = settings.edit();
             editor.putString("range", this.range);
             editor.putString("chargeTime", this.chargeTime);
+            editor.putBoolean("charging", this.charging);
+            editor.putString("chargerType", this.chargerType);
             editor.putString("lastupdate", this.lastUpdateTime);
             editor.putInt("currentBattery", this.currentBattery);
             editor.commit();

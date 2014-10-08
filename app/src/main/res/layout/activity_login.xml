@@ -43,7 +43,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Leaf Status will give a periodically updated notification containing your Leaf's current battery status."
-        android:id="@+id/battery_bars"
+        android:id="@+id/textView1"
         android:layout_alignParentStart="true"
         android:layout_marginTop="20dp"
         android:layout_below="@+id/button_signin" />
@@ -53,7 +53,7 @@
         android:layout_height="wrap_content"
         android:text="All communication is done between this phone and Nissan's secure servers, so your login credentials should be safe from interception."
         android:id="@+id/textView2"
-        android:layout_below="@+id/battery_bars"
+        android:layout_below="@+id/textView1"
         android:layout_alignParentStart="true"
         android:layout_marginTop="31dp" />
 
