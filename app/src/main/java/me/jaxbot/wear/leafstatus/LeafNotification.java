@@ -31,13 +31,12 @@ public class LeafNotification {
 
         String acText = currentHvacState ? "Stop HVAC" : "Start HVAC";
 
-        String percent = String.valueOf(((bars * 10) / 12) * 10);
-        String msg = chargeTime + " till charged, " + range + " range";
+        String msg = chargeTime + "till charged";
 
         Notification.Builder mBuilder =
             new Notification.Builder(context)
                 .setSmallIcon(R.drawable.ic_leaf_notification)
-                .setContentTitle("Leaf: " + percent + "%")
+                .setContentTitle("Leaf: " + bars + " / 12, " + range)
                 .setStyle(new Notification.BigTextStyle()
                     .bigText(msg))
                 .setContentText(msg);

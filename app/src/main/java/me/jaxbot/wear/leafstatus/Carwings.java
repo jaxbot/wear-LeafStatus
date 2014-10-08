@@ -151,9 +151,9 @@ public class Carwings {
 
             int range_km = jObject.getInt("rangeHvacOff") / 1000;
             if (settings.getBoolean("usemiles", true))
-                this.range = (range_km * 0.621371) + " mi";
+                this.range = Math.round(range_km * 0.621371) + " mi";
             else
-                this.range = range_km + " km";
+                this.range = Math.round(range_km) + " km";
 
             Time today = new Time(Time.getCurrentTimezone());
             today.setToNow();
