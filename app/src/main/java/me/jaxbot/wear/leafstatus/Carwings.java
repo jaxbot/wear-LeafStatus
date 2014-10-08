@@ -45,6 +45,7 @@ public class Carwings {
     public String lastUpdateTime;
     public String chargerType;
     public boolean charging;
+    public boolean autoUpdate;
 
     // Endpoint url for this instance
     String url;
@@ -66,6 +67,7 @@ public class Carwings {
         this.url = PortalURL[settings.getInt("portal", 0)];
         this.chargerType = settings.getString("charger", "L1");
         this.charging = settings.getBoolean("charging", false);
+        this.autoUpdate = settings.getBoolean("autoupdate", true);
 
         Log.i("portal", String.valueOf(settings.getInt("portal", 0)));
     }

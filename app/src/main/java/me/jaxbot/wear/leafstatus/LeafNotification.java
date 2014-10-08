@@ -29,6 +29,10 @@ public class LeafNotification {
         acIntent.putExtra("desiredState", !carwings.currentHvac);
         PendingIntent pendingIntentAC = PendingIntent.getBroadcast(context, 0, acIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
+        Intent updateIntent = new Intent(context, UpdateCarwingsService.class);
+        updateIntent.putExtra("hideControls", true);
+        PendingIntent pendingCarwingsIntent = PendingIntent.getService(context, 0, updateIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+
         String acText = carwings.currentHvac ? "Stop HVAC" : "Start HVAC";
 
         String msg;
@@ -45,10 +49,15 @@ public class LeafNotification {
                     .bigText(msg))
                 .setContentText(msg);
 
-        if (showACControls)
+        if (showACControls) {
             mBuilder.addAction(R.drawable.ic_fan, acText, pendingIntentAC);
-        else
-            mBuilder.addAction(R.drawable.ic_fan, "Sending AC command...", null);
+            if (carwings.autoUpdate)
+                mBuilder.addAction(R.drawable.ic_refresh, "Update", pendingCarwingsIntent);
+        }
+        else {
+            mBuilder.addAction(R.drawable.ic_leaf_notification, "Sending command...", null);
+            mBuilder.setProgress(0, 0, true);
+        }
 
         mBuilder.setContentIntent(contentIntent);
         mNotificationManager.notify(NOTIFICATION_ID, mBuilder.build());

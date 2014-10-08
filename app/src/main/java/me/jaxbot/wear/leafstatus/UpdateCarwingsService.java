@@ -33,6 +33,10 @@ public class UpdateCarwingsService extends Service {
         final Carwings carwings = new Carwings(this);
         final Context context = this;
 
+        // if the request was sent by the user, hide the controls
+        if (intent.getBooleanExtra("hideControls", false))
+            LeafNotification.sendNotification(context, carwings, false);
+
         new AsyncTask<Void, Void, Void>() {
             @Override
             protected Void doInBackground(Void... params) {
