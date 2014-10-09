@@ -39,7 +39,7 @@ public class LeafNotification {
         if (carwings.charging)
             msg = "Charging, " + carwings.chargeTime + "till charged [" + carwings.chargerType + "]";
         else
-            msg = carwings.chargeTime + "to charge";
+            msg = carwings.chargeTime + "to charge [" + carwings.chargerType + "]";
 
         Notification.Builder mBuilder =
             new Notification.Builder(context)

@@ -151,12 +151,15 @@ public class Carwings {
             this.chargeTime = jObject.getString("chargeTime");
             this.chargerType = "L1";
 
-            if (chargeTime.equals("null")) {
+            int defaultCharger = settings.getInt("defaultChargeLevel", 0);
+            Log.d("HI", "def: " + defaultCharger);
+
+            if (chargeTime.equals("null") || (!charging && defaultCharger == 1)) {
                 this.chargeTime = jObject.getString("chargeTime220");
                 this.chargerType = "L2";
             }
 
-            if (chargeTime.equals("null")) {
+            if (chargeTime.equals("null") || (!charging && defaultCharger == 2)) {
                 this.chargeTime = jObject.getString("chrgDrtn22066Tx");
                 this.chargerType = "L3";
             }

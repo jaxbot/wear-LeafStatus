@@ -18,11 +18,13 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.SeekBar;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -42,6 +44,16 @@ public class MyActivity extends ActionBarActivity {
 
         final Context context = this;
 
+        final Spinner spinner = (Spinner) findViewById(R.id.spinner_chargelevel);
+        // Create an ArrayAdapter using the string array and a default spinner layout
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
+                R.array.charge_levels, android.R.layout.simple_spinner_item);
+        // Specify the layout to use when the list of choices appears
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        // Apply the adapter to the spinner
+        spinner.setAdapter(adapter);
+        spinner.setSelection(settings.getInt("defaultChargeLevel", 0));
+
         final Button button = (Button) findViewById(R.id.button);
         button.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
@@ -56,6 +68,7 @@ public class MyActivity extends ActionBarActivity {
                 editor.putBoolean("autoupdate", autoUpdate);
                 editor.putBoolean("showPermanent", showPermanent);
                 editor.putBoolean("useMetric", useMetric);
+                editor.putInt("defaultChargeLevel", spinner.getSelectedItemPosition());
 
                 editor.commit();
 
@@ -108,6 +121,7 @@ public class MyActivity extends ActionBarActivity {
                 seekbar.setEnabled(b);
             }
         });
+
 
         Carwings carwings = new Carwings(this);
         if (carwings.lastUpdateTime.equals("")) {

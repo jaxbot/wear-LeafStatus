@@ -14,7 +14,8 @@
         android:layout_height="wrap_content"
         android:text="Save and Update"
         android:id="@+id/button"
-        android:layout_below="@+id/metric"
+        android:layout_marginTop="10dp"
+        android:layout_below="@+id/spinner_chargelevel"
         android:layout_centerHorizontal="true" />
 
     <SeekBar
@@ -54,7 +55,7 @@
         android:id="@+id/checkBox"
         android:layout_below="@+id/lastupdated"
         android:layout_alignParentStart="true"
-        android:layout_marginTop="20dp" />
+        android:layout_marginTop="10dp" />
 
     <CheckBox
         android:layout_width="wrap_content"
@@ -63,7 +64,7 @@
         android:id="@+id/permanent"
         android:layout_below="@+id/seekBar"
         android:layout_alignParentStart="true"
-        android:layout_marginTop="20dp" />
+        android:layout_marginTop="10dp" />
 
     <CheckBox
         android:layout_width="wrap_content"
@@ -72,7 +73,16 @@
         android:id="@+id/metric"
         android:layout_below="@+id/permanent"
         android:layout_alignParentStart="true"
-        android:layout_marginTop="20dp" />
+        android:layout_marginTop="10dp" />
+
+    <Spinner
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/spinner_chargelevel"
+        android:layout_below="@+id/metric"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
+        android:spinnerMode="dialog" />
 
     <TextView
         android:layout_width="wrap_content"

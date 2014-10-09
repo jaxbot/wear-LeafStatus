@@ -12,4 +12,10 @@
         <item>United States</item>
         <item>Canada</item>
     </string-array>
+
+    <string-array name="charge_levels">
+        <item>Show Level 1 time when not charging</item>
+        <item>Show Level 2 time when not charging</item>
+        <item>Show Level 3 time when not charging</item>
+    </string-array>
 </resources>
