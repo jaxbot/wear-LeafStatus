@@ -31,7 +31,7 @@ import java.util.regex.Pattern;
 public class Carwings {
 
     public static String[] PortalURL = {
-        "https://www.nissanusa.com/", // US
+        "https://www.nissanusa.com/owners/", // US
         "https://carwings.mynissan.ca/" // CA
     };
 
@@ -74,7 +74,9 @@ public class Carwings {
     private CookieStore login() {
         DefaultHttpClient httpclient = new DefaultHttpClient();
 
-        HttpPost httppost = new HttpPost(url + "owners/j_spring_security_check");
+        if (username.equals("")) return null;
+
+        HttpPost httppost = new HttpPost(url + "j_spring_security_check");
         httppost.setHeader("User-Agent", UA);
 
         try {
@@ -109,7 +111,7 @@ public class Carwings {
 
         // This is a particularly bad and non-future-safe operation,
         // but so is the entire application, since Nissan's API is internal
-        String vehicleHTML = getHTTPString(url + "owners/vehicles", jar);
+        String vehicleHTML = getHTTPString(url + "vehicles", jar);
         Pattern pattern = Pattern.compile("(.*)div class=\"vehicleHeader\" id=\"(\\d+)\"(.*)");
         Matcher m = pattern.matcher(vehicleHTML);
         if (m.matches()) {
@@ -133,12 +135,12 @@ public class Carwings {
             String carid = this.getCarId(jar);
 
             DefaultHttpClient httpclient = new DefaultHttpClient();
-            HttpGet httpget = new HttpGet(url + "owners/vehicles/statusRefresh?id=" + carid);
+            HttpGet httpget = new HttpGet(url + "vehicles/statusRefresh?id=" + carid);
             httpget.setHeader("User-Agent", UA);
             httpclient.setCookieStore(jar);
             httpclient.execute(httpget);
 
-            String result = getHTTPString(url + "owners/vehicles/pollStatusRefresh?id=" + carid, jar);
+            String result = getHTTPString(url + "vehicles/pollStatusRefresh?id=" + carid, jar);
 
             JSONObject jObject = new JSONObject(result);
             this.currentBattery = jObject.getInt("currentBattery");
@@ -197,7 +199,7 @@ public class Carwings {
 
         String carid = this.getCarId(jar);
 
-        getHTTPString(url + "owners/vehicles/setHvac?id=" + carid + "&fan=" + (desired ? "on" : "off"), jar);
+        getHTTPString(url + "vehicles/setHvac?id=" + carid + "&fan=" + (desired ? "on" : "off"), jar);
 
         return true;
     }
