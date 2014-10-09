@@ -50,10 +50,12 @@ public class MyActivity extends ActionBarActivity {
                 int interval = ((SeekBar) findViewById(R.id.seekBar)).getProgress();
                 boolean autoUpdate = ((CheckBox) findViewById(R.id.checkBox)).isChecked();
                 boolean showPermanent = ((CheckBox) findViewById(R.id.permanent)).isChecked();
+                boolean useMetric = ((CheckBox) findViewById(R.id.metric)).isChecked();
 
                 editor.putInt("interval", interval);
                 editor.putBoolean("autoupdate", autoUpdate);
                 editor.putBoolean("showPermanent", showPermanent);
+                editor.putBoolean("useMetric", useMetric);
 
                 editor.commit();
 
@@ -96,6 +98,7 @@ public class MyActivity extends ActionBarActivity {
         });
 
         ((CheckBox)(findViewById(R.id.permanent))).setChecked(settings.getBoolean("showPermanent", false));
+        ((CheckBox)(findViewById(R.id.metric))).setChecked(settings.getBoolean("useMetric", false));
         CheckBox checkbox = ((CheckBox)(findViewById(R.id.checkBox)));
         checkbox.setChecked(settings.getBoolean("autoupdate", true));
         checkbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {

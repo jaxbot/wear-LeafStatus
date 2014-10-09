@@ -14,7 +14,7 @@
         android:layout_height="wrap_content"
         android:text="Save and Update"
         android:id="@+id/button"
-        android:layout_below="@+id/permanent"
+        android:layout_below="@+id/metric"
         android:layout_centerHorizontal="true" />
 
     <SeekBar
@@ -62,6 +62,15 @@
         android:text="Make notification un-dismissable"
         android:id="@+id/permanent"
         android:layout_below="@+id/seekBar"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="20dp" />
+
+    <CheckBox
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Use metric"
+        android:id="@+id/metric"
+        android:layout_below="@+id/permanent"
         android:layout_alignParentStart="true"
         android:layout_marginTop="20dp" />
 

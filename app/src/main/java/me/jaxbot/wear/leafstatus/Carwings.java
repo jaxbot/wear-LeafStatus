@@ -47,6 +47,7 @@ public class Carwings {
     public boolean charging;
     public boolean autoUpdate;
     public boolean showPermanent;
+    public boolean useMetric;
 
     // Endpoint url for this instance
     String url;
@@ -70,6 +71,7 @@ public class Carwings {
         this.charging = settings.getBoolean("charging", false);
         this.autoUpdate = settings.getBoolean("autoupdate", true);
         this.showPermanent = settings.getBoolean("showPermanent", false);
+        this.useMetric = settings.getBoolean("useMetric", false);
 
         Log.i("portal", String.valueOf(settings.getInt("portal", 0)));
     }
@@ -168,10 +170,10 @@ public class Carwings {
             this.charging = !jObject.getString("currentCharging").equals("NOT_CHARGING");
 
             int range_km = jObject.getInt("rangeHvacOff") / 1000;
-            if (settings.getBoolean("usemiles", true))
-                this.range = Math.round(range_km * 0.621371) + " mi";
-            else
+            if (this.useMetric)
                 this.range = Math.round(range_km) + " km";
+            else
+                this.range = Math.round(range_km * 0.621371) + " mi";
 
             Time today = new Time(Time.getCurrentTimezone());
             today.setToNow();
