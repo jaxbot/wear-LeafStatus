@@ -48,14 +48,16 @@ public class MyActivity extends ActionBarActivity {
                 SharedPreferences.Editor editor = settings.edit();
 
                 int interval = ((SeekBar) findViewById(R.id.seekBar)).getProgress();
-                boolean checked = ((CheckBox) findViewById(R.id.checkBox)).isChecked();
+                boolean autoUpdate = ((CheckBox) findViewById(R.id.checkBox)).isChecked();
+                boolean showPermanent = ((CheckBox) findViewById(R.id.permanent)).isChecked();
 
                 editor.putInt("interval", interval);
-                editor.putBoolean("autoupdate", checked);
+                editor.putBoolean("autoupdate", autoUpdate);
+                editor.putBoolean("showPermanent", showPermanent);
 
                 editor.commit();
 
-                if (checked)
+                if (autoUpdate)
                     AlarmSetter.setAlarm(context);
                 else
                 {
@@ -93,6 +95,7 @@ public class MyActivity extends ActionBarActivity {
             }
         });
 
+        ((CheckBox)(findViewById(R.id.checkBox))).setChecked(settings.getBoolean("showPermanent", false));
         CheckBox checkbox = ((CheckBox)(findViewById(R.id.checkBox)));
         checkbox.setChecked(settings.getBoolean("autoupdate", true));
         checkbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {

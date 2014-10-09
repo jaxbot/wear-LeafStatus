@@ -44,7 +44,7 @@ public class LeafNotification {
         Notification.Builder mBuilder =
             new Notification.Builder(context)
                 .setSmallIcon(R.drawable.ic_leaf_notification)
-                .setContentTitle("Leaf: " + carwings.currentBattery + "/12, " + carwings.range)
+                .setContentTitle("Leaf: " + carwings.currentBattery + " of 12, " + carwings.range)
                 .setStyle(new Notification.BigTextStyle()
                     .bigText(msg))
                 .setContentText(msg);
@@ -60,6 +60,7 @@ public class LeafNotification {
         }
 
         mBuilder.setContentIntent(contentIntent);
+        mBuilder.setOngoing(carwings.showPermanent);
         mNotificationManager.notify(NOTIFICATION_ID, mBuilder.build());
     }
 
