@@ -104,11 +104,11 @@ public class MyActivity extends ActionBarActivity {
         });
 
         Carwings carwings = new Carwings(this);
-        LeafNotification.sendNotification(context, carwings);
         if (carwings.lastUpdateTime.equals("")) {
             updateCarStatusAsync();
         } else {
             updateCarStatusUI(carwings);
+            LeafNotification.sendNotification(context, carwings);
         }
     }
 
