@@ -95,7 +95,7 @@ public class MyActivity extends ActionBarActivity {
             }
         });
 
-        ((CheckBox)(findViewById(R.id.checkBox))).setChecked(settings.getBoolean("showPermanent", false));
+        ((CheckBox)(findViewById(R.id.permanent))).setChecked(settings.getBoolean("showPermanent", false));
         CheckBox checkbox = ((CheckBox)(findViewById(R.id.checkBox)));
         checkbox.setChecked(settings.getBoolean("autoupdate", true));
         checkbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -147,6 +147,7 @@ public class MyActivity extends ActionBarActivity {
         ((TextView) findViewById(R.id.chargetime)).setText(carwings.chargeTime);
         ((TextView) findViewById(R.id.range)).setText(carwings.range);
         ((TextView) findViewById(R.id.lastupdated)).setText(carwings.lastUpdateTime);
+        ((Button) findViewById(R.id.button)).setEnabled(true);
     }
 
     private void setProgressText(int interval) {
