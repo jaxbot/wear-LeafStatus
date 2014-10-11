@@ -148,19 +148,27 @@ public class Carwings {
 
             JSONObject jObject = new JSONObject(result);
             this.currentBattery = jObject.getInt("currentBattery");
-            this.chargeTime = jObject.getString("chargeTime");
+
+            String l1Time = jObject.getString("chargeTime");
+            String l2Time = jObject.getString("chargeTime220");
+            String l3Time = jObject.getString("chrgDrtn22066Tx");
+
+            // When the car is charging, only one of the ltimes will be populated
+            // with a value other than null. Fall through if null, or use default
+            // time if available
+            this.chargeTime = l1Time;
             this.chargerType = "L1";
 
             int defaultCharger = settings.getInt("defaultChargeLevel", 0);
             Log.d("HI", "def: " + defaultCharger);
 
-            if (chargeTime.equals("null") || (!charging && defaultCharger == 1)) {
-                this.chargeTime = jObject.getString("chargeTime220");
+            if (chargeTime.equals("null") || (!l2Time.equals("null") && defaultCharger == 1)) {
+                this.chargeTime = l2Time;
                 this.chargerType = "L2";
             }
 
-            if (chargeTime.equals("null") || (!charging && defaultCharger == 2)) {
-                this.chargeTime = jObject.getString("chrgDrtn22066Tx");
+            if (chargeTime.equals("null") || (!l3Time.equals("null") && defaultCharger == 2)) {
+                this.chargeTime = l3Time;
                 this.chargerType = "L3";
             }
 
