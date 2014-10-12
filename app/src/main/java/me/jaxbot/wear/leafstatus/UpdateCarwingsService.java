@@ -36,6 +36,10 @@ public class UpdateCarwingsService extends Service {
         // if the request was sent by the user, hide the controls
         if (intent != null && intent.getBooleanExtra("hideControls", false))
             LeafNotification.sendNotification(context, carwings, false);
+        else
+            // prevent any update leaks
+            if (!carwings.autoUpdate) return 0;
+
 
         new AsyncTask<Void, Void, Void>() {
             @Override
