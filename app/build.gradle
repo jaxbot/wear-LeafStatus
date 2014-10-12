@@ -8,8 +8,8 @@ android {
         applicationId "me.jaxbot.wear.leafstatus"
         minSdkVersion 19
         targetSdkVersion 20
-        versionCode 5
-        versionName "1.5.6"
+        versionCode 6
+        versionName "1.5.7"
     }
     buildTypes {
         release {
