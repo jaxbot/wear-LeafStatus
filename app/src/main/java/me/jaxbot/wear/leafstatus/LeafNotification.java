@@ -36,8 +36,13 @@ public class LeafNotification {
         String acText = carwings.currentHvac ? "Stop HVAC" : "Start HVAC";
 
         String msg;
-        if (carwings.charging)
-            msg = "Charging, " + carwings.chargeTime + "till charged [" + carwings.chargerType + "]";
+        if (carwings.charging) {
+            if (carwings.chargeTime.equals("Unknown")) {
+                msg = "Charging, indeterminate or QCing";
+            } else {
+                msg = "Charging, " + carwings.chargeTime + "till charged [" + carwings.chargerType + "]";
+            }
+        }
         else
             msg = carwings.chargeTime + "to charge [" + carwings.chargerType + "]";
 
