@@ -34,6 +34,7 @@ public class MyActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
 
         final SharedPreferences settings = getSharedPreferences("U", 0);
+
         if (settings.getString("username", "").equals("")) {
             Intent intent = new Intent(this, LoginActivity.class);
             startActivity(intent);
@@ -56,7 +57,9 @@ public class MyActivity extends ActionBarActivity {
 
         final Button button = (Button) findViewById(R.id.button);
         button.setOnClickListener(new View.OnClickListener() {
+
             public void onClick(View v) {
+                SharedPreferences settings = getSharedPreferences("U", 0);
                 SharedPreferences.Editor editor = settings.edit();
 
                 int interval = ((SeekBar) findViewById(R.id.seekBar)).getProgress();
