@@ -33,6 +33,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 public class MyActivity extends ActionBarActivity {
+    String DISCLAIMER = "A project by Jonathan Warner (@Jaxbot). Not affiliated with or supported by Nissan.";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -191,6 +193,15 @@ public class MyActivity extends ActionBarActivity {
         ((TextView) findViewById(R.id.range)).setText(carwings.range);
         ((TextView) findViewById(R.id.lastupdated)).setText(carwings.lastUpdateTime);
         ((Button) findViewById(R.id.button)).setEnabled(true);
+
+        try {
+            String versionName = this.getPackageManager()
+                .getPackageInfo(this.getPackageName(), 0).versionName;
+            ((TextView) findViewById(R.id.disclaimer)).setText(DISCLAIMER + " V" + versionName);
+        }
+        catch (Exception e)
+        {
+        }
     }
 
     private void setProgressText(int interval) {
