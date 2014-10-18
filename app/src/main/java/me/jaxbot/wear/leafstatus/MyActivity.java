@@ -39,6 +39,7 @@ public class MyActivity extends ActionBarActivity {
             Intent intent = new Intent(this, LoginActivity.class);
             startActivity(intent);
             finish();
+            return;
         }
 
         setContentView(R.layout.activity_my);
