@@ -135,7 +135,7 @@
     <CheckBox
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Make notification un-dismissable"
+        android:text="Make notification un-dismissible"
         android:id="@+id/permanent"
         android:layout_below="@+id/seekBar"
         android:layout_alignParentStart="true"

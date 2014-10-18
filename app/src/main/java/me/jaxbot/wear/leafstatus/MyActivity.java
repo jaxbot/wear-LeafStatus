@@ -1,13 +1,16 @@
 package me.jaxbot.wear.leafstatus;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.os.AsyncTask;
+import android.os.Message;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.text.Editable;
@@ -72,6 +75,19 @@ public class MyActivity extends ActionBarActivity {
                 boolean autoUpdate = ((CheckBox) findViewById(R.id.checkBox)).isChecked();
                 boolean showPermanent = ((CheckBox) findViewById(R.id.permanent)).isChecked();
                 boolean useMetric = ((CheckBox) findViewById(R.id.metric)).isChecked();
+
+                if (showPermanent && !settings.getBoolean("showPermanent", false)) {
+                    new AlertDialog.Builder(context)
+                        .setTitle("Wear Warning")
+                        .setMessage("Undismissible notifications will not display on connected Wear devices due to current limitations.")
+                        .setPositiveButton("Okay", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                // eh
+                            }
+                        })
+                        .show();
+                }
 
                 editor.putInt("interval", interval);
                 editor.putBoolean("autoupdate", autoUpdate);
