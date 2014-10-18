@@ -16,6 +16,7 @@ import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
+import android.view.SurfaceView;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
@@ -43,6 +44,10 @@ public class MyActivity extends ActionBarActivity {
         }
 
         setContentView(R.layout.activity_my);
+
+
+
+        SurfaceView view = (SurfaceView) findViewById(R.id.surfaceView2);
 
         final Context context = this;
 
@@ -163,9 +168,10 @@ public class MyActivity extends ActionBarActivity {
 
     void updateCarStatusUI(Carwings carwings)
     {
+        (findViewById(R.id.surfaceView2)).setBackgroundColor(Color.parseColor(carwings.currentBattery == 12 ? "#8bc34a" : carwings.charging ? "#ff9800" : "#03a9f4"));
         (findViewById(R.id.progressBar)).setVisibility(View.GONE);
-        ((TextView) findViewById(R.id.battery_bars)).setText(carwings.currentBattery + " / 12 bars");
-        ((TextView) findViewById(R.id.chargetime)).setText(carwings.chargeTime);
+        ((TextView) findViewById(R.id.battery_bars)).setText(carwings.currentBattery + " of 12");
+        ((TextView) findViewById(R.id.chargetime)).setText(carwings.charging ? "Charging, " + carwings.chargeTime + "till full [" + carwings.chargerType + "]" : carwings.chargeTime + "to charge [" + carwings.chargerType + "]");
         ((TextView) findViewById(R.id.range)).setText(carwings.range);
         ((TextView) findViewById(R.id.lastupdated)).setText(carwings.lastUpdateTime);
         ((Button) findViewById(R.id.button)).setEnabled(true);
