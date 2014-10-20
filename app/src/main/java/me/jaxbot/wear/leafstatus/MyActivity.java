@@ -186,7 +186,7 @@ public class MyActivity extends ActionBarActivity {
 
     void updateCarStatusUI(Carwings carwings)
     {
-        (findViewById(R.id.surfaceView2)).setBackgroundColor(Color.parseColor(carwings.currentBattery == 12 ? "#8bc34a" : carwings.charging ? "#ff9800" : "#03a9f4"));
+        (findViewById(R.id.surfaceView2)).setBackgroundColor(Color.parseColor(carwings.currentBattery == 12 ? "#8bc34a" : carwings.charging ? "#ff9800" : carwings.currentBattery > 2 ? "#03a9f4" : "#e51c23"));
         (findViewById(R.id.progressBar)).setVisibility(View.GONE);
         ((TextView) findViewById(R.id.battery_bars)).setText(carwings.currentBattery + " of 12");
         ((TextView) findViewById(R.id.chargetime)).setText(carwings.charging ? "Charging, " + carwings.chargeTime + "till full [" + carwings.chargerType + "]" : carwings.chargeTime + "to charge [" + carwings.chargerType + "]");
