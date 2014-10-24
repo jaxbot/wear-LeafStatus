@@ -169,7 +169,7 @@ public class Carwings {
 
             if (chargeTime.equals("null") || (!l3Time.equals("null") && defaultCharger == 2)) {
                 this.chargeTime = l3Time;
-                this.chargerType = "L3";
+                this.chargerType = "L2+";
             }
 
             if (chargeTime.equals("null")) {
