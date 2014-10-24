@@ -6,35 +6,23 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.Paint;
 import android.os.AsyncTask;
-import android.os.Message;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextWatcher;
-import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.MotionEvent;
-import android.view.SurfaceView;
 import android.view.View;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
-import android.widget.EditText;
 import android.widget.SeekBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
 public class MyActivity extends ActionBarActivity {
-    String DISCLAIMER = "A project by Jonathan Warner (@Jaxbot). Not affiliated with or supported by Nissan.";
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -49,10 +37,6 @@ public class MyActivity extends ActionBarActivity {
         }
 
         setContentView(R.layout.activity_my);
-
-
-
-        SurfaceView view = (SurfaceView) findViewById(R.id.surfaceView2);
 
         final Context context = this;
 
@@ -80,12 +64,11 @@ public class MyActivity extends ActionBarActivity {
 
                 if (showPermanent && !settings.getBoolean("showPermanent", false)) {
                     new AlertDialog.Builder(context)
-                        .setTitle("Wear Warning")
-                        .setMessage("Undismissible notifications will not display on connected Wear devices due to current limitations.")
-                        .setPositiveButton("Okay", new DialogInterface.OnClickListener() {
+                        .setTitle(getString(R.string.wear_warning))
+                        .setMessage(getString(R.string.undismissible))
+                        .setPositiveButton(getString(R.string.okay), new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
-                                // eh
                             }
                         })
                         .show();
@@ -102,9 +85,8 @@ public class MyActivity extends ActionBarActivity {
                 if (autoUpdate)
                     AlarmSetter.setAlarm(context);
                 else
-                {
                     AlarmSetter.cancelAlarm(context);
-                }
+
                 updateCarStatusAsync();
 
                 button.setEnabled(false);
@@ -127,14 +109,9 @@ public class MyActivity extends ActionBarActivity {
             }
 
             @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {
-
-            }
-
+            public void onStartTrackingTouch(SeekBar seekBar) {}
             @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {
-
-            }
+            public void onStopTrackingTouch(SeekBar seekBar) {}
         });
 
         ((CheckBox)(findViewById(R.id.permanent))).setChecked(settings.getBoolean("showPermanent", false));
@@ -148,7 +125,6 @@ public class MyActivity extends ActionBarActivity {
                 seekbar.setEnabled(b);
             }
         });
-
 
         Carwings carwings = new Carwings(this);
         if (carwings.lastUpdateTime.equals("")) {
@@ -186,26 +162,34 @@ public class MyActivity extends ActionBarActivity {
 
     void updateCarStatusUI(Carwings carwings)
     {
-        (findViewById(R.id.surfaceView2)).setBackgroundColor(Color.parseColor(carwings.currentBattery == 12 ? "#8bc34a" : carwings.charging ? "#ff9800" : carwings.currentBattery > 2 ? "#03a9f4" : "#e51c23"));
+        (findViewById(R.id.surfaceView2)).setBackgroundColor(Color.parseColor(
+                carwings.currentBattery == 12 ? "#8bc34a" :
+                        carwings.charging ? "#ff9800" :
+                                carwings.currentBattery > 2 ? "#03a9f4" : "#e51c23"));
+
         (findViewById(R.id.progressBar)).setVisibility(View.GONE);
+
         ((TextView) findViewById(R.id.battery_bars)).setText(carwings.currentBattery + " of 12");
-        ((TextView) findViewById(R.id.chargetime)).setText(carwings.charging ? "Charging, " + carwings.chargeTime + "till full [" + carwings.chargerType + "]" : carwings.chargeTime + "to charge [" + carwings.chargerType + "]");
+        ((TextView) findViewById(R.id.chargetime)).setText(carwings.charging ? "Charging, " +
+                carwings.chargeTime + "till full [" + carwings.chargerType + "]" :
+                carwings.chargeTime + "to charge [" + carwings.chargerType + "]");
+
         ((TextView) findViewById(R.id.range)).setText(carwings.range);
         ((TextView) findViewById(R.id.lastupdated)).setText(carwings.lastUpdateTime);
-        ((Button) findViewById(R.id.button)).setEnabled(true);
+        findViewById(R.id.button).setEnabled(true);
 
         try {
             String versionName = this.getPackageManager()
                 .getPackageInfo(this.getPackageName(), 0).versionName;
-            ((TextView) findViewById(R.id.disclaimer)).setText(DISCLAIMER + " V" + versionName);
-        }
-        catch (Exception e)
-        {
+            ((TextView) findViewById(R.id.disclaimer)).setText(getString(R.string.str_disclaimer) +
+                    " V" + versionName);
+        } catch (Exception e) {
         }
     }
 
     private void setProgressText(int interval) {
-        ((TextView) findViewById(R.id.txtMinutes)).setText("Update every " + (interval + 15) + " minutes");
+        ((TextView) findViewById(R.id.txtMinutes)).setText("Update every " + (interval + 15) +
+                " minutes");
     }
 
     void showToast(String text)
