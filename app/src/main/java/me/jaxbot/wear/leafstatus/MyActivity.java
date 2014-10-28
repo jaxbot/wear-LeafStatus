@@ -13,6 +13,7 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -49,44 +50,18 @@ public class MyActivity extends ActionBarActivity {
         // Apply the adapter to the spinner
         spinner.setAdapter(adapter);
         spinner.setSelection(settings.getInt("defaultChargeLevel", 0));
+        spinner.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                save();
+            }
+        });
 
         final Button button = (Button) findViewById(R.id.button);
         button.setOnClickListener(new View.OnClickListener() {
 
             public void onClick(View v) {
-                SharedPreferences settings = getSharedPreferences("U", 0);
-                SharedPreferences.Editor editor = settings.edit();
-
-                int interval = ((SeekBar) findViewById(R.id.seekBar)).getProgress();
-                boolean autoUpdate = ((CheckBox) findViewById(R.id.checkBox)).isChecked();
-                boolean showPermanent = ((CheckBox) findViewById(R.id.permanent)).isChecked();
-                boolean useMetric = ((CheckBox) findViewById(R.id.metric)).isChecked();
-
-                if (showPermanent && !settings.getBoolean("showPermanent", false)) {
-                    new AlertDialog.Builder(context)
-                        .setTitle(getString(R.string.wear_warning))
-                        .setMessage(getString(R.string.undismissible))
-                        .setPositiveButton(getString(R.string.okay), new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-                            }
-                        })
-                        .show();
-                }
-
-                editor.putInt("interval", interval);
-                editor.putBoolean("autoupdate", autoUpdate);
-                editor.putBoolean("showPermanent", showPermanent);
-                editor.putBoolean("useMetric", useMetric);
-                editor.putInt("defaultChargeLevel", spinner.getSelectedItemPosition());
-
-                editor.commit();
-
-                if (autoUpdate)
-                    AlarmSetter.setAlarm(context);
-                else
-                    AlarmSetter.cancelAlarm(context);
-
+                save();
                 updateCarStatusAsync();
 
                 button.setEnabled(false);
@@ -106,6 +81,7 @@ public class MyActivity extends ActionBarActivity {
             public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
                 setProgressText(i);
                 findViewById(R.id.button).setEnabled(true);
+                save();
             }
 
             @Override
@@ -123,6 +99,7 @@ public class MyActivity extends ActionBarActivity {
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                 findViewById(R.id.button).setEnabled(true);
                 seekbar.setEnabled(b);
+                save();
             }
         });
 
@@ -133,6 +110,43 @@ public class MyActivity extends ActionBarActivity {
             updateCarStatusUI(carwings);
             LeafNotification.sendNotification(context, carwings);
         }
+    }
+
+    void save() {
+        SharedPreferences settings = getSharedPreferences("U", 0);
+        SharedPreferences.Editor editor = settings.edit();
+
+        int interval = ((SeekBar) findViewById(R.id.seekBar)).getProgress();
+        boolean autoUpdate = ((CheckBox) findViewById(R.id.checkBox)).isChecked();
+        boolean showPermanent = ((CheckBox) findViewById(R.id.permanent)).isChecked();
+        boolean useMetric = ((CheckBox) findViewById(R.id.metric)).isChecked();
+        final Spinner spinner = (Spinner) findViewById(R.id.spinner_chargelevel);
+
+        if (showPermanent && !settings.getBoolean("showPermanent", false)) {
+            new AlertDialog.Builder(this)
+                    .setTitle(getString(R.string.wear_warning))
+                    .setMessage(getString(R.string.undismissible))
+                    .setPositiveButton(getString(R.string.okay), new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                        }
+                    })
+                    .show();
+        }
+
+        editor.putInt("interval", interval);
+        editor.putBoolean("autoupdate", autoUpdate);
+        editor.putBoolean("showPermanent", showPermanent);
+        editor.putBoolean("useMetric", useMetric);
+        editor.putInt("defaultChargeLevel", spinner.getSelectedItemPosition());
+
+        editor.commit();
+
+        if (autoUpdate)
+            AlarmSetter.setAlarm(this);
+        else
+            AlarmSetter.cancelAlarm(this);
+
     }
 
     void updateCarStatusAsync()
