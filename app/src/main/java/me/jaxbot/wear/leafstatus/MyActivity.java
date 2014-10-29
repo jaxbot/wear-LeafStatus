@@ -50,10 +50,15 @@ public class MyActivity extends ActionBarActivity {
         // Apply the adapter to the spinner
         spinner.setAdapter(adapter);
         spinner.setSelection(settings.getInt("defaultChargeLevel", 0));
-        spinner.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 save();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
             }
         });
 
@@ -90,8 +95,11 @@ public class MyActivity extends ActionBarActivity {
             public void onStopTrackingTouch(SeekBar seekBar) {}
         });
 
-        ((CheckBox)(findViewById(R.id.permanent))).setChecked(settings.getBoolean("showPermanent", false));
-        ((CheckBox)(findViewById(R.id.metric))).setChecked(settings.getBoolean("useMetric", false));
+        CheckBox permanent = (CheckBox)(findViewById(R.id.permanent));
+        permanent.setChecked(settings.getBoolean("showPermanent", false));
+        CheckBox metric = (CheckBox)(findViewById(R.id.metric));
+        metric.setChecked(settings.getBoolean("useMetric", false));
+
         CheckBox checkbox = ((CheckBox)(findViewById(R.id.checkBox)));
         checkbox.setChecked(settings.getBoolean("autoupdate", true));
         checkbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {

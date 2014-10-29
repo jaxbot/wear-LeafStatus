@@ -19,14 +19,14 @@ public class AlarmSetter {
         Intent intent = new Intent(context, AlarmReceiver.class);
         PendingIntent sender = PendingIntent.getBroadcast(context, 2, intent, 0);
 
+        int interval = (settings.getInt("interval", 0) + 15) * 60 * 1000;
         AlarmManager am = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-        am.setRepeating(AlarmManager.RTC_WAKEUP, 2 * 60 * 1000, (settings.getInt("interval", 0) + 15) * 60 * 1000, sender);
+        am.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + interval, interval, sender);
 
     }
 
     public static void cancelAlarm(Context context)
     {
-        SharedPreferences settings = context.getSharedPreferences("U", 0);
         Intent intent = new Intent(context, AlarmReceiver.class);
         PendingIntent sender = PendingIntent.getBroadcast(context, 2, intent, 0);
 
