@@ -72,8 +72,6 @@ public class Carwings {
         this.autoUpdate = settings.getBoolean("autoupdate", true);
         this.showPermanent = settings.getBoolean("showPermanent", false);
         this.useMetric = settings.getBoolean("useMetric", false);
-
-        Log.i("portal", String.valueOf(settings.getInt("portal", 0)));
     }
     private CookieStore login() {
         DefaultHttpClient httpclient = new DefaultHttpClient();

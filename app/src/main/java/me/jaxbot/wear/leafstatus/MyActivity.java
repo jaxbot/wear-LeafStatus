@@ -97,8 +97,21 @@ public class MyActivity extends ActionBarActivity {
 
         CheckBox permanent = (CheckBox)(findViewById(R.id.permanent));
         permanent.setChecked(settings.getBoolean("showPermanent", false));
+        permanent.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                save();
+            }
+        });
+
         CheckBox metric = (CheckBox)(findViewById(R.id.metric));
         metric.setChecked(settings.getBoolean("useMetric", false));
+        metric.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                save();
+            }
+        });
 
         CheckBox checkbox = ((CheckBox)(findViewById(R.id.checkBox)));
         checkbox.setChecked(settings.getBoolean("autoupdate", true));
@@ -155,6 +168,11 @@ public class MyActivity extends ActionBarActivity {
         else
             AlarmSetter.cancelAlarm(this);
 
+        // Show the new notification, but don't talk to the server
+        Carwings carwings = new Carwings(this);
+        if (!carwings.lastUpdateTime.equals("")) {
+            LeafNotification.sendNotification(this, carwings);
+        }
     }
 
     void updateCarStatusAsync()
