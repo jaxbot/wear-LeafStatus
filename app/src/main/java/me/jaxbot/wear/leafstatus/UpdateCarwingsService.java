@@ -13,6 +13,8 @@ import android.os.IBinder;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
+import java.util.Calendar;
+
 public class UpdateCarwingsService extends Service {
 
     public static final String TAG = "UpdateCarwingsService";
@@ -36,9 +38,18 @@ public class UpdateCarwingsService extends Service {
         // if the request was sent by the user, hide the controls
         if (intent != null && intent.getBooleanExtra("hideControls", false))
             LeafNotification.sendNotification(context, carwings, false);
-        else
+        else {
             // prevent any update leaks
             if (!carwings.autoUpdate) return 0;
+
+            // if noNightUpdates is set, do not update between 8pm and 6am
+            if (carwings.noNightUpdates) {
+                Calendar c = Calendar.getInstance();
+                int hour = c.get(Calendar.HOUR_OF_DAY);
+                if (hour > 20 && hour < 6)
+                    return 0;
+            }
+        }
 
 
         new AsyncTask<Void, Void, Void>() {
