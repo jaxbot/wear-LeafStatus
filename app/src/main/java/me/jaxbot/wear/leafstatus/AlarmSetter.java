@@ -25,6 +25,15 @@ public class AlarmSetter {
 
     }
 
+    public static void setAlarmTemp(Context context, long time)
+    {
+        Intent intent = new Intent(context, AlarmReceiver.class);
+        PendingIntent sender = PendingIntent.getBroadcast(context, 2, intent, 0);
+
+        AlarmManager am = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+        am.set(AlarmManager.RTC_WAKEUP, time, sender);
+    }
+
     public static void cancelAlarm(Context context)
     {
         Intent intent = new Intent(context, AlarmReceiver.class);

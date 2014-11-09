@@ -12,6 +12,7 @@ public class AlarmReceiver extends WakefulBroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         Log.d("A", "Alarm triggered");
+
         Intent service = new Intent(context, UpdateCarwingsService.class);
         startWakefulService(context, service);
     }

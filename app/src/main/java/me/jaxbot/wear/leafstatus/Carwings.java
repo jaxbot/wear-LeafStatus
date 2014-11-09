@@ -48,6 +48,7 @@ public class Carwings {
     public boolean autoUpdate;
     public boolean showPermanent;
     public boolean useMetric;
+    public boolean noNightUpdates;
 
     // Endpoint url for this instance
     String url;
@@ -72,6 +73,7 @@ public class Carwings {
         this.autoUpdate = settings.getBoolean("autoupdate", true);
         this.showPermanent = settings.getBoolean("showPermanent", false);
         this.useMetric = settings.getBoolean("useMetric", false);
+        this.noNightUpdates = settings.getBoolean("noNightUpdates", true);
     }
     private CookieStore login() {
         DefaultHttpClient httpclient = new DefaultHttpClient();
@@ -230,6 +232,7 @@ public class Carwings {
             BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
             String line;
             String result = "";
+
             while ((line = bufferedReader.readLine()) != null)
                 result += line;
 

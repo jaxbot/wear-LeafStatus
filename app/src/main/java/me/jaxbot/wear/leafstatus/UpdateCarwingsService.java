@@ -46,8 +46,13 @@ public class UpdateCarwingsService extends Service {
             if (carwings.noNightUpdates) {
                 Calendar c = Calendar.getInstance();
                 int hour = c.get(Calendar.HOUR_OF_DAY);
-                if (hour > 20 && hour < 6)
+                if (hour > 20 && hour < 6) {
+                    // Set the timer to activate close to 6am
+                    // This is important, as updates could be delayed up to 314 minutes
+                    // after 6am if this is not reset
+                    AlarmSetter.setAlarmTemp(this, System.currentTimeMillis() + (hour - 6) * 1000 * 60 * 60);
                     return 0;
+                }
             }
         }
 
