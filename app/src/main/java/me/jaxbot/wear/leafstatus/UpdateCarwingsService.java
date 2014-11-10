@@ -42,15 +42,15 @@ public class UpdateCarwingsService extends Service {
             // prevent any update leaks
             if (!carwings.autoUpdate) return 0;
 
-            // if noNightUpdates is set, do not update between 8pm and 6am
+            // if noNightUpdates is set, do not update between 8pm and 5am
             if (carwings.noNightUpdates) {
                 Calendar c = Calendar.getInstance();
                 int hour = c.get(Calendar.HOUR_OF_DAY);
-                if (hour > 20 && hour < 6) {
+                if (hour > 20 && hour < 5) {
                     // Set the timer to activate close to 6am
                     // This is important, as updates could be delayed up to 314 minutes
                     // after 6am if this is not reset
-                    AlarmSetter.setAlarmTemp(this, System.currentTimeMillis() + (hour - 6) * 1000 * 60 * 60);
+                    AlarmSetter.setAlarmTemp(this, System.currentTimeMillis() + (5 - hour) * 1000 * 60 * 60);
                     return 0;
                 }
             }
