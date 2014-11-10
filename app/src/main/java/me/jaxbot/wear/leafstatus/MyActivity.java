@@ -113,6 +113,15 @@ public class MyActivity extends ActionBarActivity {
             }
         });
 
+        CheckBox nightupdates = ((CheckBox)(findViewById(R.id.checkBox)));
+        nightupdates.setChecked(settings.getBoolean("noNightUpdates", true));
+        nightupdates.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                save();
+            }
+        });
+
         CheckBox checkbox = ((CheckBox)(findViewById(R.id.checkBox)));
         checkbox.setChecked(settings.getBoolean("autoupdate", true));
         checkbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -141,6 +150,7 @@ public class MyActivity extends ActionBarActivity {
         boolean autoUpdate = ((CheckBox) findViewById(R.id.checkBox)).isChecked();
         boolean showPermanent = ((CheckBox) findViewById(R.id.permanent)).isChecked();
         boolean useMetric = ((CheckBox) findViewById(R.id.metric)).isChecked();
+        boolean noNightUpdates = ((CheckBox) findViewById(R.id.nightupdates)).isChecked();
         final Spinner spinner = (Spinner) findViewById(R.id.spinner_chargelevel);
 
         if (showPermanent && !settings.getBoolean("showPermanent", false)) {
@@ -159,6 +169,7 @@ public class MyActivity extends ActionBarActivity {
         editor.putBoolean("autoupdate", autoUpdate);
         editor.putBoolean("showPermanent", showPermanent);
         editor.putBoolean("useMetric", useMetric);
+        editor.putBoolean("noNightUpdates", noNightUpdates);
         editor.putInt("defaultChargeLevel", spinner.getSelectedItemPosition());
 
         editor.commit();
