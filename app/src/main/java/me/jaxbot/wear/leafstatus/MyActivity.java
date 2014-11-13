@@ -113,7 +113,7 @@ public class MyActivity extends ActionBarActivity {
             }
         });
 
-        CheckBox nightupdates = ((CheckBox)(findViewById(R.id.checkBox)));
+        CheckBox nightupdates = ((CheckBox)(findViewById(R.id.nightupdates)));
         nightupdates.setChecked(settings.getBoolean("noNightUpdates", true));
         nightupdates.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
