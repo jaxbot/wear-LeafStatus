@@ -49,6 +49,7 @@ public class Carwings {
     public boolean showPermanent;
     public boolean useMetric;
     public boolean noNightUpdates;
+    public boolean notifyOnlyWhenCharging;
 
     // Endpoint url for this instance
     String url;
@@ -74,6 +75,7 @@ public class Carwings {
         this.showPermanent = settings.getBoolean("showPermanent", false);
         this.useMetric = settings.getBoolean("useMetric", false);
         this.noNightUpdates = settings.getBoolean("noNightUpdates", true);
+        this.notifyOnlyWhenCharging = settings.getBoolean("notifyOnlyWhenCharging", false);
     }
     private CookieStore login() {
         DefaultHttpClient httpclient = new DefaultHttpClient();

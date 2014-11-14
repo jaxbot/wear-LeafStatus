@@ -22,6 +22,11 @@ public class LeafNotification {
         NotificationManager mNotificationManager = (NotificationManager)
             context.getSystemService(Context.NOTIFICATION_SERVICE);
 
+        if (carwings.notifyOnlyWhenCharging && !carwings.charging) {
+            mNotificationManager.cancelAll();
+            return;
+        }
+
         PendingIntent contentIntent = PendingIntent.getActivity(context, 0,
             new Intent(context, MyActivity.class), 0);
 
