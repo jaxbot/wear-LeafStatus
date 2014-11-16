@@ -28,7 +28,9 @@ public class AlarmSetter {
     public static void setAlarmTemp(Context context, long time)
     {
         Intent intent = new Intent(context, AlarmReceiver.class);
-        PendingIntent sender = PendingIntent.getBroadcast(context, 2, intent, 0);
+        // Note the different requestCode
+        // This allows us to run separate alarms for the schedule and the catch up
+        PendingIntent sender = PendingIntent.getBroadcast(context, 3, intent, 0);
 
         AlarmManager am = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         am.set(AlarmManager.RTC_WAKEUP, time, sender);
