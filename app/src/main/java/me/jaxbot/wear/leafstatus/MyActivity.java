@@ -2,9 +2,11 @@ package me.jaxbot.wear.leafstatus;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.AsyncTask;
@@ -24,9 +26,21 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 public class MyActivity extends ActionBarActivity {
+    final Context that = this;
+    private class UpdatedReceiver extends BroadcastReceiver
+    {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            updateCarStatusUI(new Carwings(that));
+        }
+    }
+    UpdatedReceiver receiver;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        receiver = new UpdatedReceiver();
 
         final SharedPreferences settings = getSharedPreferences("U", 0);
 
@@ -289,6 +303,19 @@ public class MyActivity extends ActionBarActivity {
             finish();
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        IntentFilter intentfilter = new IntentFilter();
+        this.registerReceiver(receiver, intentfilter);
+    }
+
+    @Override
+    protected void onPause() {
+        unregisterReceiver(receiver);
+        super.onPause();
     }
 }
 
