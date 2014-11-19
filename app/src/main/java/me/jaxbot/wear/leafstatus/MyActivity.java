@@ -31,7 +31,8 @@ public class MyActivity extends ActionBarActivity {
     {
         @Override
         public void onReceive(Context context, Intent intent) {
-            updateCarStatusUI(new Carwings(that));
+            Carwings carwings = new Carwings(that);
+            updateCarStatusUI(carwings);
         }
     }
     UpdatedReceiver receiver;
@@ -163,6 +164,8 @@ public class MyActivity extends ActionBarActivity {
             updateCarStatusUI(carwings);
             LeafNotification.sendNotification(context, carwings);
         }
+
+        AlarmSetter.setAlarmTemp(this, System.currentTimeMillis() +  1000);
     }
 
     void save() {
@@ -308,7 +311,7 @@ public class MyActivity extends ActionBarActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        IntentFilter intentfilter = new IntentFilter();
+        IntentFilter intentfilter = new IntentFilter("leafstatus.update");
         this.registerReceiver(receiver, intentfilter);
     }
 

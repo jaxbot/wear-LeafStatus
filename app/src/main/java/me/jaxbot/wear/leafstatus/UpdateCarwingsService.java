@@ -73,6 +73,7 @@ public class UpdateCarwingsService extends Service {
                 if (carwings.update()) {
                     Log.d(TAG, "Update completed, sending notification.");
                     LeafNotification.sendNotification(context, carwings);
+                    sendBroadcast(new Intent("leafstatus.update"));
                 } else {
                     Log.d(TAG, "Update failed with an exception.");
                 }
