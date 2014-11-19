@@ -164,8 +164,6 @@ public class MyActivity extends ActionBarActivity {
             updateCarStatusUI(carwings);
             LeafNotification.sendNotification(context, carwings);
         }
-
-        AlarmSetter.setAlarmTemp(this, System.currentTimeMillis() +  1000);
     }
 
     void save() {
