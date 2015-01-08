@@ -61,7 +61,7 @@ public class LeafNotification {
 
         if (showACControls) {
             mBuilder.addAction(R.drawable.ic_fan, acText, pendingIntentAC);
-            mBuilder.addAction(R.drawable.ic_refresh, "Update Now", pendingCarwingsIntent);
+            mBuilder.addAction(R.drawable.ic_refresh, (carwings.autoUpdate ? "Sync Now" : "Update"), pendingCarwingsIntent);
         } else {
             mBuilder.addAction(R.drawable.ic_leaf_notification, "Sending command...", null);
             mBuilder.setProgress(0, 0, true);
