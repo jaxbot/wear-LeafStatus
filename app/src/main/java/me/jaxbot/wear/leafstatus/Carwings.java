@@ -131,7 +131,7 @@ public class Carwings {
 
             return cachedCarID;
         } else {
-            Log.e("Leaf", "Failed to find vehicle id");
+            Log.e(TAG, "Failed to find vehicle id");
             return "";
         }
     }
@@ -163,7 +163,7 @@ public class Carwings {
             this.chargerType = "L1";
 
             int defaultCharger = settings.getInt("defaultChargeLevel", 0);
-            Log.d("HI", "def: " + defaultCharger);
+            Log.d(TAG, "def: " + defaultCharger);
 
             if (chargeTime.equals("null") || (!l2Time.equals("null") && defaultCharger == 1)) {
                 this.chargeTime = l2Time;
