@@ -28,13 +28,23 @@ public class StartAC extends BroadcastReceiver {
                 carwings.currentHvac = state;
                 LeafNotification.sendNotification(context, carwings, false);
 
-                if (carwings.startAC(state)) {
-                    Log.i(TAG, "AC started.");
-                } else {
-                    Log.i(TAG, "StartAC failed, likely due to login.");
+                boolean success = false;
+                for (int i = 0; i < 3; i++) {
+                    Log.i(TAG, "Attempt " + i + " to start AC...");
+                    if (carwings.startAC(state)) {
+                        success = true;
+                        Log.i(TAG, "AC started.");
+                        break;
+                    } else {
+                        Log.i(TAG, "StartAC failed, likely due to login.");
+                    }
                 }
 
+                if (!success)
+                    carwings.currentHvac = !state;
+
                 LeafNotification.sendNotification(context, carwings);
+
                 return null;
             }
         }.execute(null, null, null);

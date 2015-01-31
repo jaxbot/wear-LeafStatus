@@ -29,6 +29,7 @@ import java.util.regex.Pattern;
  * Created by jonathan on 9/21/14.
  */
 public class Carwings {
+    static String TAG = "Carwings";
 
     public static String[] PortalURL = {
         "https://www.nissanusa.com/owners/", // US
@@ -216,7 +217,12 @@ public class Carwings {
 
         String carid = this.getCarId(jar);
 
-        getHTTPString(url + "vehicles/setHvac?id=" + carid + "&fan=" + (desired ? "on" : "off"), jar);
+        String output = getHTTPString(url + "vehicles/setHvac?id=" + carid + "&fan=" + (desired ? "on" : "off"), jar);
+
+        if (!output.equals("true")) {
+            Log.e(TAG, "Start AC failed. Output: " + output);
+            return false;
+        }
 
         return true;
     }
