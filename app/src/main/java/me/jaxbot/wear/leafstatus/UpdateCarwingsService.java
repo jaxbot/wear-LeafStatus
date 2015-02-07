@@ -77,6 +77,8 @@ public class UpdateCarwingsService extends Service {
                 } else {
                     Log.d(TAG, "Update failed with an exception.");
                 }
+
+                stopSelf();
                 return null;
             }
         }.execute(null, null, null);
