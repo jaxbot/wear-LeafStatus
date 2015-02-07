@@ -16,38 +16,7 @@ public class StartAC extends BroadcastReceiver {
     public void onReceive(final Context context, Intent intent) {
         Log.i(TAG, "Starting AC...");
 
-        final boolean state = intent.getBooleanExtra("desiredState", false);
-
-        Log.i(TAG, "Desired: " + String.valueOf(state));
-
-        new AsyncTask<Void, Void, Void>() {
-            @Override
-            protected Void doInBackground(Void... params) {
-                Carwings carwings = new Carwings(context);
-
-                carwings.currentHvac = state;
-                LeafNotification.sendNotification(context, carwings, false);
-
-                boolean success = false;
-                for (int i = 0; i < 3; i++) {
-                    Log.i(TAG, "Attempt " + i + " to start AC...");
-                    if (carwings.startAC(state)) {
-                        success = true;
-                        Log.i(TAG, "AC started.");
-                        break;
-                    } else {
-                        Log.i(TAG, "StartAC failed, likely due to login.");
-                    }
-                }
-
-                if (!success)
-                    carwings.currentHvac = !state;
-
-                LeafNotification.sendNotification(context, carwings);
-
-                return null;
-            }
-        }.execute(null, null, null);
-
+        Intent acintent = new Intent(context, StartACService.class);
+        context.startService(acintent);
     }
 }

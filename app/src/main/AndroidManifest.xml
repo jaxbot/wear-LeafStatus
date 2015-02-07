@@ -53,6 +53,12 @@
             android:name=".Settings"
             android:label="@string/title_activity_settings" >
         </activity>
+
+        <service
+            android:name=".StartACService"
+            android:enabled="true"
+            android:exported="true" >
+        </service>
     </application>
 
 </manifest>
