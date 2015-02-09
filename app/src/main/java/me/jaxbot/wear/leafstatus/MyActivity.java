@@ -146,6 +146,15 @@ public class MyActivity extends ActionBarActivity {
             }
         });
 
+        CheckBox alwaysShowStartHVAC = ((CheckBox)(findViewById(R.id.alwaysshowstarthvac)));
+        alwaysShowStartHVAC.setChecked(settings.getBoolean("alwaysShowStartHVAC", false));
+        alwaysShowStartHVAC.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                save();
+            }
+        });
+
         CheckBox checkbox = ((CheckBox)(findViewById(R.id.checkBox)));
         checkbox.setChecked(settings.getBoolean("autoupdate", true));
         checkbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -176,6 +185,7 @@ public class MyActivity extends ActionBarActivity {
         boolean useMetric = ((CheckBox) findViewById(R.id.metric)).isChecked();
         boolean noNightUpdates = ((CheckBox) findViewById(R.id.nightupdates)).isChecked();
         boolean notifyOnlyWhenCharging = ((CheckBox) findViewById(R.id.notifyonlycharging)).isChecked();
+        boolean alwaysShowStartHVAC = ((CheckBox) findViewById(R.id.alwaysshowstarthvac)).isChecked();
         final Spinner spinner = (Spinner) findViewById(R.id.spinner_chargelevel);
 
         if (showPermanent && !settings.getBoolean("showPermanent", false)) {
@@ -196,6 +206,7 @@ public class MyActivity extends ActionBarActivity {
         editor.putBoolean("useMetric", useMetric);
         editor.putBoolean("noNightUpdates", noNightUpdates);
         editor.putBoolean("notifyOnlyWhenCharging", notifyOnlyWhenCharging);
+        editor.putBoolean("alwaysShowStartHVAC", alwaysShowStartHVAC);
         editor.putInt("defaultChargeLevel", spinner.getSelectedItemPosition());
 
         editor.commit();

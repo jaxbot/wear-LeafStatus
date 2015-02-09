@@ -51,6 +51,7 @@ public class Carwings {
     public boolean useMetric;
     public boolean noNightUpdates;
     public boolean notifyOnlyWhenCharging;
+    public boolean alwaysShowStartHVAC;
 
     // Endpoint url for this instance
     String url;
@@ -77,6 +78,7 @@ public class Carwings {
         this.useMetric = settings.getBoolean("useMetric", false);
         this.noNightUpdates = settings.getBoolean("noNightUpdates", true);
         this.notifyOnlyWhenCharging = settings.getBoolean("notifyOnlyWhenCharging", false);
+        this.alwaysShowStartHVAC = settings.getBoolean("alwaysShowStartHVAC", false);
     }
     private CookieStore login() {
         DefaultHttpClient httpclient = new DefaultHttpClient();

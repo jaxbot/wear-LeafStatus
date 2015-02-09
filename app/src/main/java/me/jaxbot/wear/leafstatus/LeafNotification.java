@@ -30,14 +30,14 @@ public class LeafNotification {
             new Intent(context, MyActivity.class), 0);
 
         Intent acIntent = new Intent(context, StartAC.class);
-        acIntent.putExtra("desiredState", !carwings.currentHvac);
+        acIntent.putExtra("desiredState", (carwings.alwaysShowStartHVAC ? true : !carwings.currentHvac));
         PendingIntent pendingIntentAC = PendingIntent.getBroadcast(context, 0, acIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
         Intent updateIntent = new Intent(context, UpdateCarwingsService.class);
         updateIntent.putExtra("hideControls", true);
         PendingIntent pendingCarwingsIntent = PendingIntent.getService(context, 0, updateIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
-        String acText = carwings.currentHvac ? "Stop HVAC" : "Start HVAC";
+        String acText = (carwings.currentHvac && !carwings.alwaysShowStartHVAC) ? "Stop HVAC" : "Start HVAC";
 
         String msg;
         if (carwings.charging) {
