@@ -16,6 +16,7 @@ public class StartAC extends BroadcastReceiver {
         Log.i(TAG, "Starting AC...");
 
         Intent acintent = new Intent(context, StartACService.class);
+        acintent.putExtra("desiredState", intent.getBooleanExtra("desiredState", false));
         context.startService(acintent);
     }
 }
