@@ -265,14 +265,6 @@ public class MyActivity extends ActionBarActivity {
         ((TextView) findViewById(R.id.range)).setText(carwings.range);
         ((TextView) findViewById(R.id.lastupdated)).setText(carwings.lastUpdateTime);
         findViewById(R.id.button).setEnabled(true);
-
-        try {
-            String versionName = this.getPackageManager()
-                .getPackageInfo(this.getPackageName(), 0).versionName;
-            ((TextView) findViewById(R.id.disclaimer)).setText(getString(R.string.str_disclaimer) +
-                    " V" + versionName);
-        } catch (Exception e) {
-        }
     }
 
     private void setProgressText(int interval) {
