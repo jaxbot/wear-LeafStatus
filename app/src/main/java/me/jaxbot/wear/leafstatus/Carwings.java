@@ -2,8 +2,8 @@ package me.jaxbot.wear.leafstatus;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.util.Log;
 import android.text.format.Time;
+import android.util.Log;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
