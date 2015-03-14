@@ -20,73 +20,76 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
         >
-            <SurfaceView
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_alignParentTop="true"
-                android:layout_alignBottom="@+id/lastupdated"
-                android:id="@+id/surfaceView2"
-                android:layout_margin="0dp"
-                android:padding="10dp"
-                android:background="#03a9f4"
-                />
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="fill_parent">
+                <SurfaceView
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignBottom="@+id/lastupdated"
+                    android:id="@+id/surfaceView2"
+                    android:layout_margin="0dp"
+                    android:padding="10dp"
+                    android:background="#03a9f4"
+                    />
 
-            <TextView
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceLarge"
-                android:text=""
-                android:layout_width="fill_parent"
-                android:layout_marginTop="5dp"
-                android:id="@+id/battery_bars"
-                android:textColor="#ffffff"
-                android:layout_alignParentTop="true"
-                android:layout_alignParentStart="true"
-                android:layout_alignEnd="@+id/seekBar"
-                android:textAlignment="center"
-                android:gravity="center"
-                android:textSize="@dimen/hugetext" />
+                <TextView
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:text=""
+                    android:layout_width="fill_parent"
+                    android:layout_marginTop="5dp"
+                    android:id="@+id/battery_bars"
+                    android:textColor="#ffffff"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentStart="true"
+                    android:textAlignment="center"
+                    android:gravity="center"
+                    android:textSize="@dimen/hugetext" />
 
-            <TextView
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceLarge"
-                android:text=""
-                android:id="@+id/range"
-                android:layout_below="@+id/battery_bars"
-                android:textColor="#ffffff"
-                android:layout_alignParentStart="true"
-                android:textAlignment="center"
-                android:layout_alignEnd="@+id/battery_bars"
-                android:gravity="center" />
+                <TextView
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:text=""
+                    android:id="@+id/range"
+                    android:layout_below="@+id/battery_bars"
+                    android:textColor="#ffffff"
+                    android:layout_alignParentStart="true"
+                    android:textAlignment="center"
+                    android:layout_alignEnd="@+id/battery_bars"
+                    android:gravity="center" />
 
-            <TextView
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceLarge"
-                android:text=""
-                android:id="@+id/chargetime"
-                android:textColor="#ffffff"
-                android:layout_below="@+id/range"
-                android:layout_alignParentStart="true"
-                android:textAlignment="center"
-                android:layout_alignEnd="@+id/range"
-                android:gravity="center" />
+                <TextView
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:text=""
+                    android:id="@+id/chargetime"
+                    android:textColor="#ffffff"
+                    android:layout_below="@+id/range"
+                    android:layout_alignParentStart="true"
+                    android:textAlignment="center"
+                    android:layout_alignEnd="@+id/range"
+                    android:gravity="center" />
 
-            <TextView
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
-                android:textAppearance="@android:style/TextAppearance.DeviceDefault.Small"
-                android:text=""
-                android:id="@+id/lastupdated"
-                android:textColor="#ffffff"
-                android:layout_below="@+id/chargetime"
-                android:layout_alignParentStart="true"
-                android:layout_marginTop="5dp"
-                android:paddingBottom="10dp"
-                android:textAlignment="center"
-                android:layout_alignEnd="@+id/range"
-                android:gravity="center" />
+                <TextView
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:textAppearance="@android:style/TextAppearance.DeviceDefault.Small"
+                    android:text=""
+                    android:id="@+id/lastupdated"
+                    android:textColor="#ffffff"
+                    android:layout_below="@+id/chargetime"
+                    android:layout_alignParentStart="true"
+                    android:layout_marginTop="5dp"
+                    android:paddingBottom="10dp"
+                    android:textAlignment="center"
+                    android:layout_alignEnd="@+id/range"
+                    android:gravity="center" />
+            </RelativeLayout>
         </com.facebook.shimmer.ShimmerFrameLayout>
 
 
@@ -118,7 +121,7 @@
             android:textAppearance="?android:attr/textAppearanceSmall"
             android:text="15 minutes"
             android:id="@+id/txtMinutes"
-            android:layout_below="@+id/lastupdated"
+            android:layout_below="@+id/shimmer_view_container"
             android:layout_marginTop="18dp"
             android:layout_marginRight="10dp"
             android:layout_alignEnd="@+id/seekBar" />
@@ -128,7 +131,7 @@
             android:layout_height="wrap_content"
             android:text="Auto-update"
             android:id="@+id/checkBox"
-            android:layout_below="@+id/lastupdated"
+            android:layout_below="@+id/shimmer_view_container"
             android:layout_alignParentStart="true"
             android:layout_marginTop="10dp"
             android:layout_marginLeft="10dp" />
