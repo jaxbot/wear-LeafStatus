@@ -25,6 +25,8 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.facebook.shimmer.ShimmerFrameLayout;
+
 public class MyActivity extends ActionBarActivity {
     final Context that = this;
     private class UpdatedReceiver extends BroadcastReceiver
@@ -173,6 +175,9 @@ public class MyActivity extends ActionBarActivity {
             updateCarStatusUI(carwings);
             LeafNotification.sendNotification(context, carwings);
         }
+
+        ShimmerFrameLayout container = (ShimmerFrameLayout) findViewById(R.id.shimmer_view_container);
+        container.startShimmerAnimation();
     }
 
     void save() {
