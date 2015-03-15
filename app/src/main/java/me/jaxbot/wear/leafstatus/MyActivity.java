@@ -175,9 +175,6 @@ public class MyActivity extends ActionBarActivity {
             updateCarStatusUI(carwings);
             LeafNotification.sendNotification(context, carwings);
         }
-
-        ShimmerFrameLayout container = (ShimmerFrameLayout) findViewById(R.id.shimmer_view_container);
-        container.startShimmerAnimation();
     }
 
     void save() {
@@ -231,6 +228,8 @@ public class MyActivity extends ActionBarActivity {
     void updateCarStatusAsync()
     {
         (findViewById(R.id.progressBar)).setVisibility(View.VISIBLE);
+        ShimmerFrameLayout container = (ShimmerFrameLayout) findViewById(R.id.shimmer_view_container);
+        container.startShimmerAnimation();
 
         final Context context = this;
         final Activity activity = this;
@@ -261,6 +260,8 @@ public class MyActivity extends ActionBarActivity {
                                 carwings.currentBattery > 2 ? "#03a9f4" : "#e51c23"));
 
         (findViewById(R.id.progressBar)).setVisibility(View.GONE);
+        ShimmerFrameLayout container = (ShimmerFrameLayout) findViewById(R.id.shimmer_view_container);
+        container.stopShimmerAnimation();
 
         ((TextView) findViewById(R.id.battery_bars)).setText(carwings.currentBattery + " of 12");
         ((TextView) findViewById(R.id.chargetime)).setText(carwings.charging ? "Charging, " +
