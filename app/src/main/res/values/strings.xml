@@ -12,6 +12,8 @@
     <string name="wear_warning">Wear Warning</string>
     <string name="undismissible">Undismissible notifications will not display on connected Wear devices due to current limitations.</string>
     <string name="okay">Okay</string>
+    <string name="start_hvac">Start HVAC</string>
+    <string name="stop_hvac">Stop HVAC</string>
 
     <string-array name="supported_countries">
         <item>United States</item>

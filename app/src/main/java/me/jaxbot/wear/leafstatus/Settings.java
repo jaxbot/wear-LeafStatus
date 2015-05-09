@@ -8,6 +8,8 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 
 
 public class Settings extends Activity {
@@ -36,6 +38,33 @@ public class Settings extends Activity {
                 finish();
             }
         });
+
+        CheckBox metric = (CheckBox)(findViewById(R.id.metric));
+        metric.setChecked(Configuration.useMetric);
+        metric.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                save();
+            }
+        });
+
+        CheckBox nightupdates = ((CheckBox)(findViewById(R.id.nightupdates)));
+        nightupdates.setChecked(Configuration.noNightUpdates);
+        nightupdates.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                save();
+            }
+        });
+
+    }
+
+    void save() {
+        boolean useMetric = ((CheckBox) findViewById(R.id.metric)).isChecked();
+        boolean noNightUpdates = ((CheckBox) findViewById(R.id.nightupdates)).isChecked();
+        Configuration.useMetric = useMetric;
+        Configuration.noNightUpdates = noNightUpdates;
+        Configuration.save(this);
     }
 
     @Override

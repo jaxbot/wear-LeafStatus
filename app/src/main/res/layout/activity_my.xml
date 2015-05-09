@@ -149,24 +149,6 @@
         <CheckBox
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Use metric"
-            android:id="@+id/metric"
-            android:layout_below="@+id/permanent"
-            android:layout_alignParentStart="true"
-            android:layout_marginLeft="10dp" />
-
-        <CheckBox
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Do not update between 8pm and 5am"
-            android:id="@+id/nightupdates"
-            android:layout_below="@+id/metric"
-            android:layout_alignParentStart="true"
-            android:layout_marginLeft="10dp" />
-
-        <CheckBox
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
             android:text="Hide notification when not charging"
             android:id="@+id/notifyonlycharging"
             android:layout_below="@+id/nightupdates"

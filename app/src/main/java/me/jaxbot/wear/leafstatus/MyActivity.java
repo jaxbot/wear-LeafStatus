@@ -54,6 +54,8 @@ public class MyActivity extends ActionBarActivity {
             return;
         }
 
+        Configuration.init(this);
+
         setContentView(R.layout.activity_my);
 
         final Context context = this;
@@ -66,7 +68,7 @@ public class MyActivity extends ActionBarActivity {
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         // Apply the adapter to the spinner
         spinner.setAdapter(adapter);
-        spinner.setSelection(settings.getInt("defaultChargeLevel", 0));
+        spinner.setSelection(Configuration.defaultChargeLevel);
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
@@ -92,7 +94,7 @@ public class MyActivity extends ActionBarActivity {
             }
         });
 
-        int interval = settings.getInt("interval", 30);
+        int interval = Configuration.interval;
         final SeekBar seekbar = (SeekBar)findViewById(R.id.seekBar);
 
         seekbar.setProgress(interval);
@@ -113,7 +115,7 @@ public class MyActivity extends ActionBarActivity {
         });
 
         CheckBox permanent = (CheckBox)(findViewById(R.id.permanent));
-        permanent.setChecked(settings.getBoolean("showPermanent", false));
+        permanent.setChecked(Configuration.showPermanent);
         permanent.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
@@ -121,26 +123,8 @@ public class MyActivity extends ActionBarActivity {
             }
         });
 
-        CheckBox metric = (CheckBox)(findViewById(R.id.metric));
-        metric.setChecked(settings.getBoolean("useMetric", false));
-        metric.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                save();
-            }
-        });
-
-        CheckBox nightupdates = ((CheckBox)(findViewById(R.id.nightupdates)));
-        nightupdates.setChecked(settings.getBoolean("noNightUpdates", true));
-        nightupdates.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                save();
-            }
-        });
-
         CheckBox notifyonly = ((CheckBox)(findViewById(R.id.notifyonlycharging)));
-        notifyonly.setChecked(settings.getBoolean("notifyOnlyWhenCharging", false));
+        notifyonly.setChecked(Configuration.notifyOnlyWhenCharging);
         notifyonly.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
@@ -149,7 +133,7 @@ public class MyActivity extends ActionBarActivity {
         });
 
         CheckBox alwaysShowStartHVAC = ((CheckBox)(findViewById(R.id.alwaysshowstarthvac)));
-        alwaysShowStartHVAC.setChecked(settings.getBoolean("alwaysShowStartHVAC", false));
+        alwaysShowStartHVAC.setChecked(Configuration.alwaysShowStartHVAC);
         alwaysShowStartHVAC.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
@@ -158,7 +142,7 @@ public class MyActivity extends ActionBarActivity {
         });
 
         CheckBox checkbox = ((CheckBox)(findViewById(R.id.checkBox)));
-        checkbox.setChecked(settings.getBoolean("autoupdate", true));
+        checkbox.setChecked(Configuration.autoUpdate);
         checkbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
@@ -178,19 +162,14 @@ public class MyActivity extends ActionBarActivity {
     }
 
     void save() {
-        SharedPreferences settings = getSharedPreferences("U", 0);
-        SharedPreferences.Editor editor = settings.edit();
-
         int interval = ((SeekBar) findViewById(R.id.seekBar)).getProgress();
         boolean autoUpdate = ((CheckBox) findViewById(R.id.checkBox)).isChecked();
         boolean showPermanent = ((CheckBox) findViewById(R.id.permanent)).isChecked();
-        boolean useMetric = ((CheckBox) findViewById(R.id.metric)).isChecked();
-        boolean noNightUpdates = ((CheckBox) findViewById(R.id.nightupdates)).isChecked();
         boolean notifyOnlyWhenCharging = ((CheckBox) findViewById(R.id.notifyonlycharging)).isChecked();
         boolean alwaysShowStartHVAC = ((CheckBox) findViewById(R.id.alwaysshowstarthvac)).isChecked();
         final Spinner spinner = (Spinner) findViewById(R.id.spinner_chargelevel);
 
-        if (showPermanent && !settings.getBoolean("showPermanent", false)) {
+        if (showPermanent && !Configuration.showPermanent) {
             new AlertDialog.Builder(this)
                     .setTitle(getString(R.string.wear_warning))
                     .setMessage(getString(R.string.undismissible))
@@ -202,16 +181,13 @@ public class MyActivity extends ActionBarActivity {
                     .show();
         }
 
-        editor.putInt("interval", interval);
-        editor.putBoolean("autoupdate", autoUpdate);
-        editor.putBoolean("showPermanent", showPermanent);
-        editor.putBoolean("useMetric", useMetric);
-        editor.putBoolean("noNightUpdates", noNightUpdates);
-        editor.putBoolean("notifyOnlyWhenCharging", notifyOnlyWhenCharging);
-        editor.putBoolean("alwaysShowStartHVAC", alwaysShowStartHVAC);
-        editor.putInt("defaultChargeLevel", spinner.getSelectedItemPosition());
+        Configuration.interval = interval;
+        Configuration.autoUpdate = autoUpdate;
+        Configuration.showPermanent = showPermanent;
+        Configuration.notifyOnlyWhenCharging = notifyOnlyWhenCharging;
+        Configuration.alwaysShowStartHVAC = alwaysShowStartHVAC;
 
-        editor.commit();
+        Configuration.save(this);
 
         if (autoUpdate)
             AlarmSetter.setAlarm(this);
@@ -311,6 +287,10 @@ public class MyActivity extends ActionBarActivity {
             Intent intent = new Intent(this, LoginActivity.class);
             startActivity(intent);
             finish();
+        }
+        if (id == R.id.action_settings) {
+            Intent intent = new Intent(this, Settings.class);
+            startActivity(intent);
         }
         return super.onOptionsItemSelected(item);
     }
