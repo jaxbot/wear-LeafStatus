@@ -25,13 +25,7 @@ public class Settings extends Activity {
         signoff.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                SharedPreferences settings = getSharedPreferences("U", 0);
-                SharedPreferences.Editor editor = settings.edit();
-
-                editor.putString("username", "");
-                editor.putString("password", "");
-
-                editor.commit();
+                Configuration.signOff(context);
 
                 Intent intent = new Intent(context, LoginActivity.class);
                 startActivity(intent);

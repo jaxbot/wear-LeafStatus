@@ -15,7 +15,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 
-
 public class LoginActivity extends Activity {
     final static String TAG = "LoginActivity";
 
@@ -36,28 +35,20 @@ public class LoginActivity extends Activity {
         final Context context = this;
         final Activity activity = this;
 
-
-        final SharedPreferences settings = getSharedPreferences("U", 0);
+        Configuration.init(context);
 
         final Button button = (Button) findViewById(R.id.button_signin);
         button.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
 
-                SharedPreferences.Editor editor = settings.edit();
 
-                String username = ((EditText) findViewById(R.id.txtUsername)).getText().toString();
-                String password = ((EditText) findViewById(R.id.txtPassword)).getText().toString();
-
-                editor.putString("username", username);
-                editor.putString("password", password);
-                editor.putString("carid", "");
-                editor.putInt("portal", spinner.getSelectedItemPosition());
-
-                editor.commit();
+                Configuration.username = ((EditText) findViewById(R.id.txtUsername)).getText().toString();
+                Configuration.password = ((EditText) findViewById(R.id.txtPassword)).getText().toString();
+                Configuration.carid = "";
+                Configuration.portal = spinner.getSelectedItemPosition();
 
                 button.setEnabled(false);
                 button.setText("Signing in...");
-
 
                 new AsyncTask<Void, Void, Void>() {
                     @Override
@@ -96,3 +87,4 @@ public class LoginActivity extends Activity {
         return true;
     }
 }
+

@@ -45,16 +45,14 @@ public class MyActivity extends ActionBarActivity {
 
         receiver = new UpdatedReceiver();
 
-        final SharedPreferences settings = getSharedPreferences("U", 0);
+        Configuration.init(this);
 
-        if (settings.getString("username", "").equals("")) {
+        if (Configuration.username.equals("")) {
             Intent intent = new Intent(this, LoginActivity.class);
             startActivity(intent);
             finish();
             return;
         }
-
-        Configuration.init(this);
 
         setContentView(R.layout.activity_my);
 
@@ -276,13 +274,7 @@ public class MyActivity extends ActionBarActivity {
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
         if (id == R.id.action_signoff) {
-            SharedPreferences settings = getSharedPreferences("U", 0);
-            SharedPreferences.Editor editor = settings.edit();
-
-            editor.putString("username", "");
-            editor.putString("password", "");
-
-            editor.commit();
+            Configuration.signOff();
 
             Intent intent = new Intent(this, LoginActivity.class);
             startActivity(intent);

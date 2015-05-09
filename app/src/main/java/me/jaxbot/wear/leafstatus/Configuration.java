@@ -16,6 +16,11 @@ public class Configuration {
     public static boolean alwaysShowStartHVAC;
     public static int defaultChargeLevel;
 
+    public static String username;
+    public static String password;
+    public static String carid;
+    public static int portal;
+
     public static void init(Context context) {
         SharedPreferences settings = context.getSharedPreferences("U", 0);
         SharedPreferences.Editor editor = settings.edit();
@@ -28,6 +33,11 @@ public class Configuration {
         noNightUpdates = settings.getBoolean("noNightUpdates", true);
         defaultChargeLevel = settings.getInt("defaultChargeLevel", 0);
         interval = settings.getInt("interval", 30);
+
+        username = settings.getString("username", "");
+        password = settings.getString("password", "");
+        carid = settings.getString("carid", "");
+        portal = settings.getInt("portal", 0);
     }
 
     public static void save(Context context) {
@@ -43,6 +53,17 @@ public class Configuration {
         editor.putBoolean("alwaysShowStartHVAC", alwaysShowStartHVAC);
         editor.putInt("defaultChargeLevel", defaultChargeLevel);
 
+        editor.putString("username", username);
+        editor.putString("password", password);
+        editor.putString("carid", carid);
+        editor.putInt("portal", portal);
+
         editor.commit();
+    }
+
+    public static void signOff(Context context) {
+        username = "";
+        password = "";
+        save(context);
     }
 }
