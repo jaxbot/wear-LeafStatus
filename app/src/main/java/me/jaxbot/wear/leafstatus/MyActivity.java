@@ -184,6 +184,7 @@ public class MyActivity extends ActionBarActivity {
         Configuration.showPermanent = showPermanent;
         Configuration.notifyOnlyWhenCharging = notifyOnlyWhenCharging;
         Configuration.alwaysShowStartHVAC = alwaysShowStartHVAC;
+        Configuration.defaultChargeLevel = spinner.getSelectedItemPosition();
 
         Configuration.save(this);
 
@@ -274,7 +275,7 @@ public class MyActivity extends ActionBarActivity {
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
         if (id == R.id.action_signoff) {
-            Configuration.signOff();
+            Configuration.signOff(this);
 
             Intent intent = new Intent(this, LoginActivity.class);
             startActivity(intent);

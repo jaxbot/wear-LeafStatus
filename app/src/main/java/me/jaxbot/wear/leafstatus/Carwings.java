@@ -71,6 +71,7 @@ public class Carwings {
         this.range = settings.getString("range", "");
         this.lastUpdateTime = settings.getString("lastupdate", "");
         this.url = PortalURL[settings.getInt("portal", 0)];
+        Log.i(TAG, this.url);
         this.chargerType = settings.getString("chargerType", "L1");
         this.charging = settings.getBoolean("charging", false);
         this.autoUpdate = settings.getBoolean("autoupdate", true);

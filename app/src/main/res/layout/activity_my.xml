@@ -151,7 +151,7 @@
             android:layout_height="wrap_content"
             android:text="Hide notification when not charging"
             android:id="@+id/notifyonlycharging"
-            android:layout_below="@+id/nightupdates"
+            android:layout_below="@+id/permanent"
             android:layout_alignParentStart="true"
             android:layout_marginLeft="10dp" />
 
