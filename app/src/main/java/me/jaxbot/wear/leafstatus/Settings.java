@@ -51,6 +51,16 @@ public class Settings extends Activity {
             }
         });
 
+        if (Configuration.autoUpdate)
+            AlarmSetter.setAlarm(this);
+        else
+            AlarmSetter.cancelAlarm(this);
+
+        // Show the new notification, but don't talk to the server
+        Carwings carwings = new Carwings(this);
+        if (!carwings.lastUpdateTime.equals("")) {
+            LeafNotification.sendNotification(this, carwings);
+        }
     }
 
     void save() {
