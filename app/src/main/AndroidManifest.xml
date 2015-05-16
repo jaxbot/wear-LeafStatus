@@ -64,6 +64,11 @@
             android:enabled="true"
             android:exported="true" >
         </service>
+
+        <activity
+            android:name=".ExperimentsActivity"
+            android:label="@string/title_activity_experiments" >
+        </activity>
     </application>
 
 </manifest>

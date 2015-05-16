@@ -281,6 +281,10 @@ public class MyActivity extends ActionBarActivity {
             startActivity(intent);
             finish();
         }
+        if (id == R.id.action_experiments) {
+            Intent intent = new Intent(this, ExperimentsActivity.class);
+            startActivity(intent);
+        }
         if (id == R.id.action_settings) {
             Intent intent = new Intent(this, Settings.class);
             startActivity(intent);

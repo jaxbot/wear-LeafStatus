@@ -15,15 +15,21 @@
     <string name="okay">Okay</string>
     <string name="start_hvac">Start HVAC</string>
     <string name="stop_hvac">Stop HVAC</string>
+    <string name="camp_mode">Camp Mode is an experimental feature that will keep your AC on as long as desired, instead of the usual 15 minute limit. This is an experimental feature and while it appears to work in testing, be warned that unexpected behavior may occur. By using this feature, you agree that the developer is not responsible for any damage done to your phone or car, or any other oddities. Do not trust this feature to protect someone who would otherwise be harmed in a hot car.</string>
+    <string name="start_camp_mode">Start Camp Mode</string>
+    <string name="stop_camp_mode">Stop Camp Mode</string>
+    <string name="action_experiments">Experiments</string>
 
     <string-array name="supported_countries">
         <item>United States</item>
         <item>Canada</item>
     </string-array>
-
     <string-array name="charge_levels">
         <item>Show Level 1 time when not charging</item>
         <item>Show Level 2 3.3kW time when not charging</item>
         <item>Show Level 2 6.6kW time when not charging</item>
     </string-array>
+
+    <string name="title_activity_experiments">ExperimentsActivity</string>
+
 </resources>

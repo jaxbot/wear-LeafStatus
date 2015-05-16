@@ -21,6 +21,8 @@ public class Configuration {
     public static String carid;
     public static int portal;
 
+    public static boolean campModeOn;
+
     public static void init(Context context) {
         SharedPreferences settings = context.getSharedPreferences("U", 0);
         SharedPreferences.Editor editor = settings.edit();
@@ -38,6 +40,8 @@ public class Configuration {
         password = settings.getString("password", "");
         carid = settings.getString("carid", "");
         portal = settings.getInt("portal", 0);
+
+        campModeOn = settings.getBoolean("campModeOn", false);
     }
 
     public static void save(Context context) {
