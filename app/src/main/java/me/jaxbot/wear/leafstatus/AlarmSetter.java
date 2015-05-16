@@ -10,8 +10,7 @@ import android.content.SharedPreferences;
  * Created by jonathan on 9/27/14.
  */
 public class AlarmSetter {
-    public static void setAlarm(Context context)
-    {
+    public static void setAlarm(Context context) {
         SharedPreferences settings = context.getSharedPreferences("U", 0);
 
         if (!settings.getBoolean("autoupdate", true)) return;
@@ -25,8 +24,7 @@ public class AlarmSetter {
 
     }
 
-    public static void setAlarmTemp(Context context, long time)
-    {
+    public static void setAlarmTemp(Context context, long time) {
         Intent intent = new Intent(context, AlarmReceiver.class);
         // Note the different requestCode
         // This allows us to run separate alarms for the schedule and the catch up
@@ -36,10 +34,28 @@ public class AlarmSetter {
         am.set(AlarmManager.RTC_WAKEUP, time, sender);
     }
 
-    public static void cancelAlarm(Context context)
-    {
+    public static void cancelAlarm(Context context) {
         Intent intent = new Intent(context, AlarmReceiver.class);
         PendingIntent sender = PendingIntent.getBroadcast(context, 2, intent, 0);
+
+        AlarmManager am = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+        am.cancel(sender);
+    }
+
+    public static void setCampAlarm(Context context)
+    {
+        Intent intent = new Intent(context, AlarmReceiver.class);
+        PendingIntent sender = PendingIntent.getBroadcast(context, 4, intent, 0);
+
+        int interval = 14 * 60 * 1000; // 14 minutes
+        AlarmManager am = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+        am.setRepeating(AlarmManager.RTC_WAKEUP, 0, interval, sender);
+    }
+
+    public static void cancelCampAlarm(Context context)
+    {
+        Intent intent = new Intent(context, AlarmReceiver.class);
+        PendingIntent sender = PendingIntent.getBroadcast(context, 4, intent, 0);
 
         AlarmManager am = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         am.cancel(sender);
