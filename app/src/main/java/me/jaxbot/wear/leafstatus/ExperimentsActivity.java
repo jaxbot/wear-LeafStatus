@@ -23,14 +23,16 @@ public class ExperimentsActivity extends ActionBarActivity {
             @Override
             public void onClick(View view) {
                 if (Configuration.campModeOn) {
-                    AlarmSetter.cancelAlarm(ctx);
+                    AlarmSetter.cancelCampAlarm(ctx);
                 } else {
                     AlarmSetter.setCampAlarm(ctx);
                 }
                 Configuration.campModeOn = !Configuration.campModeOn;
+                Configuration.save(ctx);
                 updateCampTitle(campbtn);
             }
         });
+        updateCampTitle(campbtn);
     }
 
     void updateCampTitle(Button campbtn) {
