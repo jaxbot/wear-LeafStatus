@@ -44,17 +44,17 @@ public class AlarmSetter {
 
     public static void setCampAlarm(Context context)
     {
-        Intent intent = new Intent(context, AlarmReceiver.class);
+        Intent intent = new Intent(context, AlarmReceiverCamp.class);
         PendingIntent sender = PendingIntent.getBroadcast(context, 4, intent, 0);
 
-        int interval = 14 * 60 * 1000; // 14 minutes
+        int interval = 12 * 60 * 1000; // 12 minutes
         AlarmManager am = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         am.setRepeating(AlarmManager.RTC_WAKEUP, 0, interval, sender);
     }
 
     public static void cancelCampAlarm(Context context)
     {
-        Intent intent = new Intent(context, AlarmReceiver.class);
+        Intent intent = new Intent(context, AlarmReceiverCamp.class);
         PendingIntent sender = PendingIntent.getBroadcast(context, 4, intent, 0);
 
         AlarmManager am = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);

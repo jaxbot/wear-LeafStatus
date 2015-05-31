@@ -19,7 +19,7 @@ public class AlarmReceiverCamp extends WakefulBroadcastReceiver {
         Log.i(TAG, "Alarm triggered, starting AC...");
 
         Intent acintent = new Intent(context, StartACService.class);
-        acintent.putExtra("desiredState", intent.getBooleanExtra("desiredState", false));
+        acintent.putExtra("desiredState", true);
         context.startService(acintent);
     }
 }
