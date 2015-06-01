@@ -33,7 +33,8 @@ public class Carwings {
 
     public static String[] PortalURL = {
         "https://www.nissanusa.com/owners/", // US
-        "https://carwings.mynissan.ca/" // CA
+        "https://carwings.mynissan.ca/", // CA
+        "http://www.nissan.co.uk/GB/en/YouPlus/welcome_pack_leaf.html/" // UK
     };
 
     private String username;
