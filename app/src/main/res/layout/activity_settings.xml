@@ -25,13 +25,4 @@
         android:layout_below="@+id/metric"
         android:layout_alignParentStart="true"
         android:layout_marginLeft="10dp" />
-
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Sign Off"
-        android:id="@+id/button_signoff"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentEnd="true" />
 </RelativeLayout>

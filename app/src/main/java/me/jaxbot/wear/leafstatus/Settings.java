@@ -21,18 +21,6 @@ public class Settings extends Activity {
 
         final Context context = this;
 
-        Button signoff = (Button)findViewById(R.id.button_signoff);
-        signoff.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Configuration.signOff(context);
-
-                Intent intent = new Intent(context, LoginActivity.class);
-                startActivity(intent);
-                finish();
-            }
-        });
-
         CheckBox metric = (CheckBox)(findViewById(R.id.metric));
         metric.setChecked(Configuration.useMetric);
         metric.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
