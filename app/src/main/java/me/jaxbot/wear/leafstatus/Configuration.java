@@ -22,6 +22,7 @@ public class Configuration {
     public static int portal;
 
     public static boolean campModeOn;
+    public static int campModeLastRun;
 
     public static void init(Context context) {
         SharedPreferences settings = context.getSharedPreferences("U", 0);
@@ -42,6 +43,7 @@ public class Configuration {
         portal = settings.getInt("portal", 0);
 
         campModeOn = settings.getBoolean("campModeOn", false);
+        campModeLastRun = settings.getInt("campModeLastRun", 0);
     }
 
     public static void save(Context context) {
@@ -61,6 +63,9 @@ public class Configuration {
         editor.putString("password", password);
         editor.putString("carid", carid);
         editor.putInt("portal", portal);
+
+        editor.putBoolean("campModeOn", campModeOn);
+        editor.putInt("campModeLastRun", campModeLastRun);
 
         editor.commit();
     }

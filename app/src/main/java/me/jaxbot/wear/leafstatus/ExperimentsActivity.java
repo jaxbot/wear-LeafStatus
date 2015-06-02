@@ -36,6 +36,12 @@ public class ExperimentsActivity extends ActionBarActivity {
     }
 
     void updateCampTitle(Button campbtn) {
+        // Audit the camp mode state
+        if (System.currentTimeMillis() - Configuration.campModeLastRun > 1000 * 60 * 15) {
+            Configuration.campModeOn = false;
+            Configuration.save(this);
+        }
+
         if (Configuration.campModeOn)
             campbtn.setText(R.string.stop_camp_mode);
         else

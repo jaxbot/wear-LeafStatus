@@ -21,5 +21,9 @@ public class AlarmReceiverCamp extends WakefulBroadcastReceiver {
         Intent acintent = new Intent(context, StartACService.class);
         acintent.putExtra("desiredState", true);
         context.startService(acintent);
+
+        Configuration.campModeOn = true;
+        Configuration.campModeLastRun = (int)System.currentTimeMillis();
+        Configuration.save(context);
     }
 }
