@@ -42,14 +42,21 @@ public class AlarmSetter {
         am.cancel(sender);
     }
 
-    public static void setCampAlarm(Context context)
+    public static boolean setCampAlarm(Context context)
     {
+        Carwings carwings = new Carwings(context);
+        if (carwings.currentBattery < 3 && !carwings.charging) {
+            return false;
+        }
+
         Intent intent = new Intent(context, AlarmReceiverCamp.class);
         PendingIntent sender = PendingIntent.getBroadcast(context, 4, intent, 0);
 
         int interval = 12 * 60 * 1000; // 12 minutes
         AlarmManager am = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         am.setRepeating(AlarmManager.RTC_WAKEUP, 0, interval, sender);
+
+        return true;
     }
 
     public static void cancelCampAlarm(Context context)

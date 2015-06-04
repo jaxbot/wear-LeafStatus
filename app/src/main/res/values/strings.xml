@@ -19,6 +19,8 @@
     <string name="start_camp_mode">Start Camp Mode</string>
     <string name="stop_camp_mode">Stop Camp Mode</string>
     <string name="action_experiments">Experiments</string>
+    <string name="battery_too_low">Battery too low</string>
+    <string name="battery_too_low_desc">Refusing to start Camp Mode because the car is not charging and current battery bars are below 3. If the car has been plugged in recently, press Update Now on the main screen.</string>
 
     <string-array name="supported_countries">
         <item>United States</item>

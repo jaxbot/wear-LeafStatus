@@ -1,6 +1,8 @@
 package me.jaxbot.wear.leafstatus;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -17,6 +19,7 @@ public class ExperimentsActivity extends ActionBarActivity {
         setContentView(R.layout.activity_experiments);
 
         final Context ctx = this;
+        final Carwings carwings = new Carwings(ctx);
 
         final Button campbtn = (Button)findViewById(R.id.campbtn);
         campbtn.setOnClickListener(new View.OnClickListener() {
@@ -25,7 +28,18 @@ public class ExperimentsActivity extends ActionBarActivity {
                 if (Configuration.campModeOn) {
                     AlarmSetter.cancelCampAlarm(ctx);
                 } else {
-                    AlarmSetter.setCampAlarm(ctx);
+                    boolean success = AlarmSetter.setCampAlarm(ctx);
+                    if (!success) {
+                        new AlertDialog.Builder(ctx)
+                                .setTitle(getString(R.string.battery_too_low))
+                                .setMessage(getString(R.string.battery_too_low_desc))
+                                .setPositiveButton(getString(R.string.okay), new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialogInterface, int i) {
+                                    }
+                                })
+                                .show();
+                    }
                 }
                 Configuration.campModeOn = !Configuration.campModeOn;
                 Configuration.save(ctx);
