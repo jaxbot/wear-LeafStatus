@@ -27,9 +27,11 @@ public class ExperimentsActivity extends ActionBarActivity {
             public void onClick(View view) {
                 if (Configuration.campModeOn) {
                     AlarmSetter.cancelCampAlarm(ctx);
+                    CampModeNotification.hideNotification(ctx);
                 } else {
                     boolean success = AlarmSetter.setCampAlarm(ctx);
                     if (!success) {
+                        CampModeNotification.hideNotification(ctx);
                         new AlertDialog.Builder(ctx)
                                 .setTitle(getString(R.string.battery_too_low))
                                 .setMessage(getString(R.string.battery_too_low_desc))
@@ -39,6 +41,8 @@ public class ExperimentsActivity extends ActionBarActivity {
                                     }
                                 })
                                 .show();
+                    } else {
+                        CampModeNotification.showNotification(ctx);
                     }
                 }
                 Configuration.campModeOn = !Configuration.campModeOn;
@@ -54,6 +58,7 @@ public class ExperimentsActivity extends ActionBarActivity {
         if (System.currentTimeMillis() - Configuration.campModeLastRun > 1000 * 60 * 15) {
             Configuration.campModeOn = false;
             Configuration.save(this);
+            CampModeNotification.hideNotification(this);
         }
 
         if (Configuration.campModeOn)

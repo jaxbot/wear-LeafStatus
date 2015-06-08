@@ -32,6 +32,6 @@
         <item>Show Level 2 6.6kW time when not charging</item>
     </string-array>
 
-    <string name="title_activity_experiments">ExperimentsActivity</string>
+    <string name="title_activity_experiments">Experiments</string>
 
 </resources>

@@ -25,5 +25,6 @@ public class AlarmReceiverCamp extends WakefulBroadcastReceiver {
         Configuration.campModeOn = true;
         Configuration.campModeLastRun = (int)System.currentTimeMillis();
         Configuration.save(context);
+        CampModeNotification.showNotification(context);
     }
 }
