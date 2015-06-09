@@ -10,7 +10,7 @@ public class StopCampMode extends BroadcastReceiver {
 
     @Override
     public void onReceive(final Context context, Intent intent) {
-        Log.i(TAG, "Starting AC...");
+        Log.i(TAG, "Stopping camp mode...");
 
         AlarmSetter.cancelCampAlarm(context);
         CampModeNotification.hideNotification(context);
