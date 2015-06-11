@@ -26,7 +26,6 @@ public class Configuration {
 
     public static void init(Context context) {
         SharedPreferences settings = context.getSharedPreferences("U", 0);
-        SharedPreferences.Editor editor = settings.edit();
 
         showPermanent = settings.getBoolean("showPermanent", false);
         notifyOnlyWhenCharging = settings.getBoolean("notifyOnlyWhenCharging", false);

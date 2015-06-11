@@ -26,19 +26,19 @@
         <receiver
             android:name=".AlarmReceiver"
             android:enabled="true"
-            android:exported="true" >
+            android:exported="false" >
         </receiver>
         <receiver android:name=".StartAC" />
         <receiver
             android:name=".AlarmReceiverCamp"
             android:enabled="true"
-            android:exported="true" >
+            android:exported="false" >
         </receiver>
 
         <service
             android:name=".UpdateCarwingsService"
             android:enabled="true"
-            android:exported="true" >
+            android:exported="false" >
         </service>
 
         <receiver
@@ -62,7 +62,7 @@
         <service
             android:name=".StartACService"
             android:enabled="true"
-            android:exported="true" >
+            android:exported="false" >
         </service>
 
         <activity

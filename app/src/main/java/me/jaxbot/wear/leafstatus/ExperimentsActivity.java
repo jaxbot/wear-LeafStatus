@@ -19,10 +19,9 @@ public class ExperimentsActivity extends ActionBarActivity {
         setContentView(R.layout.activity_experiments);
 
         final Context ctx = this;
-        final Carwings carwings = new Carwings(ctx);
 
-        final Button campbtn = (Button)findViewById(R.id.campbtn);
-        campbtn.setOnClickListener(new View.OnClickListener() {
+        final Button campBtn = (Button)findViewById(R.id.campbtn);
+        campBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (Configuration.campModeOn) {
@@ -47,10 +46,10 @@ public class ExperimentsActivity extends ActionBarActivity {
                 }
                 Configuration.campModeOn = !Configuration.campModeOn;
                 Configuration.save(ctx);
-                updateCampTitle(campbtn);
+                updateCampTitle(campBtn);
             }
         });
-        updateCampTitle(campbtn);
+        updateCampTitle(campBtn);
     }
 
     void updateCampTitle(Button campbtn) {
