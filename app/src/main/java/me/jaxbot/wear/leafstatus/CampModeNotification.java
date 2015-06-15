@@ -24,7 +24,7 @@ public class CampModeNotification {
         PendingIntent contentIntent = PendingIntent.getActivity(context, 0,
                 new Intent(context, MyActivity.class), 0);
 
-        Intent acIntent = new Intent(context, StartAC.class);
+        Intent acIntent = new Intent(context, StopCampMode.class);
         PendingIntent pendingIntentAC = PendingIntent.getBroadcast(context, 0, acIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
         mBuilder.addAction(R.drawable.ic_fan, "Stop camp mode", pendingIntentAC);

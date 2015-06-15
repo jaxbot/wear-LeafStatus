@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -12,6 +13,7 @@ import android.widget.Button;
 
 
 public class ExperimentsActivity extends ActionBarActivity {
+    String TAG = "ExperimentsActivity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,10 +27,12 @@ public class ExperimentsActivity extends ActionBarActivity {
             @Override
             public void onClick(View view) {
                 if (Configuration.campModeOn) {
+                    Configuration.campModeOn = false;
                     AlarmSetter.cancelCampAlarm(ctx);
                     CampModeNotification.hideNotification(ctx);
                 } else {
                     boolean success = AlarmSetter.setCampAlarm(ctx);
+                    Log.i(TAG, success ? "Success!" : "Not success");
                     if (!success) {
                         CampModeNotification.hideNotification(ctx);
                         new AlertDialog.Builder(ctx)
@@ -42,9 +46,9 @@ public class ExperimentsActivity extends ActionBarActivity {
                                 .show();
                     } else {
                         CampModeNotification.showNotification(ctx);
+                        Configuration.campModeOn = true;
                     }
                 }
-                Configuration.campModeOn = !Configuration.campModeOn;
                 Configuration.save(ctx);
                 updateCampTitle(campBtn);
             }
@@ -55,6 +59,7 @@ public class ExperimentsActivity extends ActionBarActivity {
     void updateCampTitle(Button campbtn) {
         // Audit the camp mode state
         if (System.currentTimeMillis() - Configuration.campModeLastRun > 1000 * 60 * 15) {
+            Log.i(TAG, "Cowardly turning off camp mode, since it hasn't been running.");
             Configuration.campModeOn = false;
             Configuration.save(this);
             CampModeNotification.hideNotification(this);

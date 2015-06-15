@@ -56,6 +56,9 @@ public class AlarmSetter {
         AlarmManager am = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         am.setRepeating(AlarmManager.RTC_WAKEUP, 0, interval, sender);
 
+        Configuration.campModeLastRun = System.currentTimeMillis();
+        Configuration.save(context);
+
         return true;
     }
 
