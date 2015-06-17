@@ -53,10 +53,7 @@ public class ExperimentsActivity extends ActionBarActivity {
                 updateCampTitle(campBtn);
             }
         });
-        updateCampTitle(campBtn);
-    }
 
-    void updateCampTitle(Button campbtn) {
         // Audit the camp mode state
         if (System.currentTimeMillis() - Configuration.campModeLastRun > 1000 * 60 * 15) {
             Log.i(TAG, "Cowardly turning off camp mode, since it hasn't been running.");
@@ -65,6 +62,10 @@ public class ExperimentsActivity extends ActionBarActivity {
             CampModeNotification.hideNotification(this);
         }
 
+        updateCampTitle(campBtn);
+    }
+
+    void updateCampTitle(Button campbtn) {
         if (Configuration.campModeOn)
             campbtn.setText(R.string.stop_camp_mode);
         else
