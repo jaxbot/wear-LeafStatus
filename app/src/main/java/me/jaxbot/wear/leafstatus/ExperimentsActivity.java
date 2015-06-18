@@ -10,6 +10,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
 
 public class ExperimentsActivity extends ActionBarActivity {
@@ -21,7 +22,6 @@ public class ExperimentsActivity extends ActionBarActivity {
         setContentView(R.layout.activity_experiments);
 
         final Context ctx = this;
-
         final Button campBtn = (Button)findViewById(R.id.campbtn);
         campBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -47,6 +47,8 @@ public class ExperimentsActivity extends ActionBarActivity {
                     } else {
                         CampModeNotification.showNotification(ctx);
                         Configuration.campModeOn = true;
+                        Toast toast = Toast.makeText(ctx, "Starting A/C camp mode...", Toast.LENGTH_LONG);
+                        toast.show();
                     }
                 }
                 Configuration.save(ctx);
