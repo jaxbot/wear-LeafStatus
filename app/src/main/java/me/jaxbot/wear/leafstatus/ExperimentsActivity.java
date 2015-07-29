@@ -67,7 +67,7 @@ public class ExperimentsActivity extends ActionBarActivity {
         updateCampTitle(campBtn);
     }
 
-    void updateCampTitle(Button campbtn) {
+    private void updateCampTitle(Button campbtn) {
         if (Configuration.campModeOn)
             campbtn.setText(R.string.stop_camp_mode);
         else

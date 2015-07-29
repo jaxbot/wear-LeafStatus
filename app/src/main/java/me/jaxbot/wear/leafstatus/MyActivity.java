@@ -29,6 +29,8 @@ import com.facebook.shimmer.ShimmerFrameLayout;
 
 public class MyActivity extends ActionBarActivity {
     final Context that = this;
+    private UpdatedReceiver receiver;
+
     private class UpdatedReceiver extends BroadcastReceiver
     {
         @Override
@@ -37,7 +39,6 @@ public class MyActivity extends ActionBarActivity {
             updateCarStatusUI(carwings);
         }
     }
-    UpdatedReceiver receiver;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -159,7 +160,7 @@ public class MyActivity extends ActionBarActivity {
         }
     }
 
-    void save() {
+    private void save() {
         int interval = ((SeekBar) findViewById(R.id.seekBar)).getProgress();
         boolean autoUpdate = ((CheckBox) findViewById(R.id.checkBox)).isChecked();
         boolean showPermanent = ((CheckBox) findViewById(R.id.permanent)).isChecked();
@@ -200,7 +201,7 @@ public class MyActivity extends ActionBarActivity {
         }
     }
 
-    void updateCarStatusAsync()
+    private void updateCarStatusAsync()
     {
         (findViewById(R.id.progressBar)).setVisibility(View.VISIBLE);
         ShimmerFrameLayout container = (ShimmerFrameLayout) findViewById(R.id.shimmer_view_container);
@@ -227,7 +228,7 @@ public class MyActivity extends ActionBarActivity {
         }.execute(null, null, null);
     }
 
-    void updateCarStatusUI(Carwings carwings)
+    private void updateCarStatusUI(Carwings carwings)
     {
         (findViewById(R.id.surfaceView2)).setBackgroundColor(Color.parseColor(
                 carwings.currentBattery == 12 ? "#8bc34a" :
@@ -253,7 +254,7 @@ public class MyActivity extends ActionBarActivity {
                 " minutes");
     }
 
-    void showToast(String text)
+    private void showToast(String text)
     {
         int duration = Toast.LENGTH_LONG;
 
