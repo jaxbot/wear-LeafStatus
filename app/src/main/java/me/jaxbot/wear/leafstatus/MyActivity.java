@@ -8,6 +8,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.content.res.Resources;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -230,6 +231,8 @@ public class MyActivity extends ActionBarActivity {
 
     private void updateCarStatusUI(Carwings carwings)
     {
+        Resources res = getResources();
+
         (findViewById(R.id.surfaceView2)).setBackgroundColor(Color.parseColor(
                 carwings.currentBattery == 12 ? "#8bc34a" :
                         carwings.charging ? "#ff9800" :
@@ -239,10 +242,11 @@ public class MyActivity extends ActionBarActivity {
         ShimmerFrameLayout container = (ShimmerFrameLayout) findViewById(R.id.shimmer_view_container);
         container.stopShimmerAnimation();
 
-        ((TextView) findViewById(R.id.battery_bars)).setText(carwings.currentBattery + " of 12");
-        ((TextView) findViewById(R.id.chargetime)).setText(carwings.charging ? "Charging, " +
-                carwings.chargeTime + "till full [" + carwings.chargerType + "]" :
-                carwings.chargeTime + "to charge [" + carwings.chargerType + "]");
+        ((TextView) findViewById(R.id.battery_bars)).setText(
+                String.format(res.getString(R.string.charge_status_battery_bars), carwings.currentBattery));
+        ((TextView) findViewById(R.id.chargetime)).setText(
+                String.format(res.getString(carwings.charging ? R.string.charge_status_charging
+                : R.string.charge_status_not_charging), carwings.chargeTime, carwings.chargerType));
 
         ((TextView) findViewById(R.id.range)).setText(carwings.range);
         ((TextView) findViewById(R.id.lastupdated)).setText(carwings.lastUpdateTime);

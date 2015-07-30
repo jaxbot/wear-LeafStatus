@@ -34,4 +34,8 @@
 
     <string name="title_activity_experiments">Experiments</string>
 
+    <string name="charge_status_charging">Charging, %1till full [%2]</string>
+    <string name="charge_status_not_charging">%1to charge [%2]</string>
+    <string name="charge_status_battery_bars">%1 of 12</string>
+
 </resources>
