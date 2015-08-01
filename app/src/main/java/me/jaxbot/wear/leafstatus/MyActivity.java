@@ -233,10 +233,10 @@ public class MyActivity extends ActionBarActivity {
     {
         Resources res = getResources();
 
-        (findViewById(R.id.surfaceView2)).setBackgroundColor(Color.parseColor(
-                carwings.currentBattery == 12 ? "#8bc34a" :
-                        carwings.charging ? "#ff9800" :
-                                carwings.currentBattery > 2 ? "#03a9f4" : "#e51c23"));
+        (findViewById(R.id.surfaceView2)).setBackgroundColor(res.getColor(
+                carwings.currentBattery == 12 ? R.color.green :
+                        carwings.charging ? R.color.orange :
+                                carwings.currentBattery > 2 ? R.color.blue : R.color.red));
 
         (findViewById(R.id.progressBar)).setVisibility(View.GONE);
         ShimmerFrameLayout container = (ShimmerFrameLayout) findViewById(R.id.shimmer_view_container);
