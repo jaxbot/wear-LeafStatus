@@ -14,7 +14,6 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
-import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -32,7 +31,7 @@ public class Carwings {
     static String TAG = "Carwings";
 
     public static String[] PortalURL = {
-        "https://www.nissanusa.com/owners/", // US
+        "https://owners.nissanusa.com/nowners/", // US
         "https://carwings.mynissan.ca/", // CA
         "http://www.nissan.co.uk/GB/en/YouPlus/welcome_pack_leaf.html/" // UK
     };
@@ -60,7 +59,7 @@ public class Carwings {
     SharedPreferences settings;
 
     // Disgusting, but we're using the web frontend, and thus will pretend
-    String UA = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/38.0.2125.111 Safari/537.36";
+    String UA = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/45.0.2454.101 Safari/537.36";
 
     public Carwings(Context context)
     {
@@ -85,16 +84,23 @@ public class Carwings {
         DefaultHttpClient httpclient = new DefaultHttpClient();
 
         if (username.equals("")) return null;
-
-        HttpPost httppost = new HttpPost(url + "j_spring_security_check");
-        httppost.setHeader("User-Agent", UA);
-
         try {
+            HttpGet httpget = new HttpGet(url);
+            httpget.setHeader("User-Agent", UA);
+            httpclient.execute(httpget);
+
+            CookieStore jar = httpclient.getCookieStore();
+            httpclient.setCookieStore(jar);
+            HttpPost httppost = new HttpPost(url + "user/login");
+            httppost.setHeader("User-Agent", UA);
+
             // Add your data
             List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
-            nameValuePairs.add(new BasicNameValuePair("j_username", username));
-            nameValuePairs.add(new BasicNameValuePair("j_passwordHolder", "Password"));
-            nameValuePairs.add(new BasicNameValuePair("j_password", password));
+            nameValuePairs.add(new BasicNameValuePair("username", username));
+            nameValuePairs.add(new BasicNameValuePair("password", password));
+            nameValuePairs.add(new BasicNameValuePair("callFrom", ""));
+            nameValuePairs.add(new BasicNameValuePair("status", ""));
+            nameValuePairs.add(new BasicNameValuePair("_rememberMeCheckbox", ""));
             httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
 
             // Execute HTTP Post Request
@@ -115,21 +121,22 @@ public class Carwings {
 
     private String getCarId(CookieStore jar) {
         // Check if we have already grabbed this
-        String cachedCarID = settings.getString("carid", "");
+        String cachedCarID = settings.getString("vin", "");
         if (!cachedCarID.equals(""))
             return cachedCarID;
 
         // This is a particularly bad and non-future-safe operation,
         // but so is the entire application, since Nissan's API is internal
-        String vehicleHTML = getHTTPString(url + "vehicles", jar);
-        Pattern pattern = Pattern.compile("(.*)div class=\"vehicleHeader\" id=\"(\\d+)\"(.*)");
+        String vehicleHTML = getHTTPString(url + "user/home", jar);
+        System.out.println(vehicleHTML);
+        Pattern pattern = Pattern.compile("(.*)var vinId = \"([a-zA-Z0-9]+)\"(.*)");
         Matcher m = pattern.matcher(vehicleHTML);
         if (m.matches()) {
             cachedCarID = m.group(2);
 
             // Save it, since it is unlikely to change
             SharedPreferences.Editor editor = settings.edit();
-            editor.putString("carid", cachedCarID);
+            editor.putString("vin", cachedCarID);
             editor.commit();
 
             return cachedCarID;
@@ -145,19 +152,46 @@ public class Carwings {
             String carid = this.getCarId(jar);
 
             DefaultHttpClient httpclient = new DefaultHttpClient();
-            HttpGet httpget = new HttpGet(url + "vehicles/statusRefresh?id=" + carid);
+            HttpGet httpget = new HttpGet(url + "EV/statusRefresh?vin=" + carid);
             httpget.setHeader("User-Agent", UA);
             httpclient.setCookieStore(jar);
             httpclient.execute(httpget);
 
-            String result = getHTTPString(url + "vehicles/pollStatusRefresh?id=" + carid, jar);
+            String result = getHTTPString(url + "EV/refresh?vin=" + carid, jar);
 
-            JSONObject jObject = new JSONObject(result);
-            this.currentBattery = jObject.getInt("currentBattery");
+            // name="btryLvlNb" value="8"
+            System.out.println("prebattt");
+            System.out.println(result);
+            Matcher matcher = Pattern.compile("(.*)name=\"btryLvlNb\" value=\"([a-zA-Z0-9 ]+)\"(.*)").matcher(result);
+            if (matcher.matches()) {
+                this.currentBattery = Integer.parseInt(matcher.group(2));
+                System.out.println("bat: " + this.currentBattery);
+            }
 
-            String l1Time = jObject.getString("chargeTime");
-            String l2Time = jObject.getString("chargeTime220");
-            String l3Time = jObject.getString("chrgDrtn22066Tx");
+            /*
+                <td class="chrgType">
+                    Trickle
+                </td>
+                <td class="chrgTypeText">
+                    7 hrs 0 min 
+                </td>
+            */
+            matcher = Pattern.compile("(.*) class=\"chrgType\">[\\s]+Trickle[\\s]+\\</td\\>[\\s]+\\<td class=\"chrgTypeText\"\\>[\\s]+([a-zA-Z0-9\\ ]+)(.*)").matcher(result);
+            matcher.matches();
+            String l1Time = matcher.group(2);
+            System.out.println("l1: " + l1Time);
+
+            // <input type="hidden" name="chrgTm220KVTx" value="3 hrs 30 min " id="chrgTm220KVTx" />
+            matcher = Pattern.compile("(.*) name=\"chrgTm220KVTx\" value=\"([a-zA-Z0-9\\ ]+)\"(.*)").matcher(result);
+            matcher.matches();
+            String l2Time = matcher.group(2);
+            System.out.println("l2: " + l2Time);
+
+            // <input type="hidden" name="rmngChrg220KvChrgrTx" value="2 hrs 30 min " id="rmngChrg220KvChrgrTx" />
+            matcher = Pattern.compile("(.*) name=\"rmngChrg220KvChrgrTx\" value=\"([a-zA-Z0-9\\ ]+)\"(.*)").matcher(result);
+            matcher.matches();
+            String l3Time = matcher.group(2);
+            System.out.println("l3: " + l3Time);
 
             // When the car is charging, only one of the ltimes will be populated
             // with a value other than null. Fall through if null, or use default
@@ -183,10 +217,22 @@ public class Carwings {
                 this.chargerType = "?";
             }
 
-            this.currentHvac = jObject.getBoolean("currentHvac");
-            this.charging = !jObject.getString("currentCharging").equals("NOT_CHARGING");
+            // <input type="hidden" name="hvacIn" value="false" id="hvacIn" />
+            matcher = Pattern.compile("(.*) name=\"hvacIn\" value=\"([a-zA-Z0-9\\ ]+)\"(.*)").matcher(result);
+            this.currentHvac = !matcher.group(2).equals("false");
+            System.out.println("chvac: " + this.currentHvac);
 
-            int range_km = jObject.getInt("rangeHvacOff") / 1000;
+            // <input type="hidden" name="chargingStsCd" value="NOT_CHARGING" id="chargingStsCd" />
+            matcher = Pattern.compile("(.*) name=\"chargingStsCd\" value=\"([a-zA-Z0-9\\ ]+)\"(.*)").matcher(result);
+            matcher.matches();
+            this.charging = !matcher.group(2).equals("NOT_CHARGING");
+            System.out.println("charg: " + this.charging);
+
+            // <input type="hidden" name="rngHvacOffNb" value="103600" id="rngHvacOffNb" />
+            matcher = Pattern.compile("(.*) name=\"rngHvacOffNb\" value=\"(\\d+)\"(.*)").matcher(result);
+            matcher.matches();
+            int range_km = Integer.parseInt(matcher.group(2)) / 1000;
+            System.out.println("rangekm: " + range_km);
             if (this.useMetric)
                 this.range = Math.round(range_km) + " km";
             else
@@ -207,6 +253,7 @@ public class Carwings {
 
             return true;
         } catch (Exception e) {
+            System.out.println("Failure!!!");
             System.out.println(e);
         }
 
@@ -220,7 +267,7 @@ public class Carwings {
 
         String carid = this.getCarId(jar);
 
-        String output = getHTTPString(url + "vehicles/setHvac?id=" + carid + "&fan=" + (desired ? "on" : "off"), jar);
+        String output = getHTTPString(url + "vehicles/setHvac?vin=" + carid + "&fan=" + (desired ? "on" : "off"), jar);
 
         if (!output.equals("true")) {
             Log.e(TAG, "Start AC failed. Output: " + output);
@@ -244,8 +291,9 @@ public class Carwings {
             String line;
             String result = "";
 
-            while ((line = bufferedReader.readLine()) != null)
+            while ((line = bufferedReader.readLine()) != null) {
                 result += line;
+            }
 
             inputStream.close();
 
