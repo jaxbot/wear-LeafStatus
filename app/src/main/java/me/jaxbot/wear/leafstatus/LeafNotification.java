@@ -12,6 +12,7 @@ import android.content.Intent;
 public class LeafNotification {
 
     public static final int NOTIFICATION_ID = 1;
+    public static final int NOTIFICATION_ID_UPGRADE = 2;
 
     public static void sendNotification(Context context, Carwings carwings) {
         sendNotification(context, carwings, true);
@@ -71,5 +72,23 @@ public class LeafNotification {
         mNotificationManager.notify(NOTIFICATION_ID, mBuilder.build());
     }
 
+    public static void sendUpgradeNotification(Context context) {
+        NotificationManager mNotificationManager = (NotificationManager)
+                context.getSystemService(Context.NOTIFICATION_SERVICE);
+
+        String msg = "Please visit the Nissan Owner Portal website and sign in, then sign in here with your email and password.";
+        PendingIntent contentIntent = PendingIntent.getActivity(context, 0,
+                new Intent(context, MyActivity.class), 0);
+        Notification.Builder mBuilder =
+                new Notification.Builder(context)
+                        .setSmallIcon(R.drawable.ic_leaf_notification)
+                        .setContentTitle("Leaf Notification: Attention Required")
+                        .setStyle(new Notification.BigTextStyle()
+                                .bigText(msg))
+                        .setContentText(msg);
+
+        mBuilder.setContentIntent(contentIntent);
+        mNotificationManager.notify(NOTIFICATION_ID_UPGRADE, mBuilder.build());
+    }
 
 }

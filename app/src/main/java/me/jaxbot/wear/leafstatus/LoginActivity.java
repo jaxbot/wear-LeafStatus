@@ -46,6 +46,7 @@ public class LoginActivity extends Activity {
                 Configuration.password = ((EditText) findViewById(R.id.txtPassword)).getText().toString();
                 Configuration.carid = "";
                 Configuration.portal = spinner.getSelectedItemPosition();
+                Configuration.newOwnerVersion = true;
                 Configuration.save(context);
 
                 button.setEnabled(false);

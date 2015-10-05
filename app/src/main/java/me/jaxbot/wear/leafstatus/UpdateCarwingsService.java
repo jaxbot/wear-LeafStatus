@@ -3,6 +3,7 @@ package me.jaxbot.wear.leafstatus;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.os.IBinder;
 import android.util.Log;
@@ -28,6 +29,14 @@ public class UpdateCarwingsService extends Service {
 
         final Carwings carwings = new Carwings(this);
         final Context context = this;
+        Configuration.init(context);
+        if (!Configuration.newOwnerVersion) {
+            LeafNotification.sendUpgradeNotification(context);
+            Configuration.autoUpdate = false;
+            Configuration.username = "";
+            Configuration.password = "";
+            Configuration.save(context);
+        }
 
         // if the request was sent by the user, hide the controls
         if (intent != null && intent.getBooleanExtra("hideControls", false))

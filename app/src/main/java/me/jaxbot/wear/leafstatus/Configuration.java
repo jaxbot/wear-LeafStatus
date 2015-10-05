@@ -24,6 +24,8 @@ public class Configuration {
     public static boolean campModeOn;
     public static long campModeLastRun;
 
+    public static boolean newOwnerVersion;
+
     public static void init(Context context) {
         SharedPreferences settings = context.getSharedPreferences("U", 0);
 
@@ -43,6 +45,8 @@ public class Configuration {
 
         campModeOn = settings.getBoolean("campModeOn", false);
         campModeLastRun = settings.getLong("campModeLastRun", 0);
+
+        newOwnerVersion = settings.getBoolean("newOwnerVersion", false);
     }
 
     public static void save(Context context) {
@@ -65,6 +69,7 @@ public class Configuration {
 
         editor.putBoolean("campModeOn", campModeOn);
         editor.putLong("campModeLastRun", campModeLastRun);
+        editor.putBoolean("newOwnerVersion", newOwnerVersion);
 
         editor.commit();
     }
