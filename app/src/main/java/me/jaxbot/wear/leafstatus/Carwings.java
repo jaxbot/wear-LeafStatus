@@ -219,11 +219,12 @@ public class Carwings {
 
             // <input type="hidden" name="hvacIn" value="false" id="hvacIn" />
             matcher = Pattern.compile("(.*) name=\"hvacIn\" value=\"([a-zA-Z0-9\\ ]+)\"(.*)").matcher(result);
+            matcher.matches();
             this.currentHvac = !matcher.group(2).equals("false");
             System.out.println("chvac: " + this.currentHvac);
 
             // <input type="hidden" name="chargingStsCd" value="NOT_CHARGING" id="chargingStsCd" />
-            matcher = Pattern.compile("(.*) name=\"chargingStsCd\" value=\"([a-zA-Z0-9\\ ]+)\"(.*)").matcher(result);
+            matcher = Pattern.compile("(.*) name=\"chargingStsCd\" value=\"([a-zA-Z0-9_ ]+)\"(.*)").matcher(result);
             matcher.matches();
             this.charging = !matcher.group(2).equals("NOT_CHARGING");
             System.out.println("charg: " + this.charging);
@@ -267,7 +268,7 @@ public class Carwings {
 
         String carid = this.getCarId(jar);
 
-        String output = getHTTPString(url + "vehicles/setHvac?vin=" + carid + "&fan=" + (desired ? "on" : "off"), jar);
+        String output = getHTTPString(url + "EV/setHvac?vin=" + carid + "&fan=" + (desired ? "on" : "off"), jar);
 
         if (!output.equals("true")) {
             Log.e(TAG, "Start AC failed. Output: " + output);
