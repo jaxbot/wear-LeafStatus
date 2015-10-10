@@ -177,21 +177,30 @@ public class Carwings {
                 </td>
             */
             matcher = Pattern.compile("(.*) class=\"chrgType\">[\\s]+Trickle[\\s]+\\</td\\>[\\s]+\\<td class=\"chrgTypeText\"\\>[\\s]+([a-zA-Z0-9\\ ]+)(.*)").matcher(result);
-            matcher.matches();
-            String l1Time = matcher.group(2);
-            System.out.println("l1: " + l1Time);
+            String l1Time = "null";
+            System.out.println("checking l1");
+            if (matcher.matches()) {
+                l1Time = matcher.group(2);
+                System.out.println("l1: " + l1Time);
+            }
 
             // <input type="hidden" name="chrgTm220KVTx" value="3 hrs 30 min " id="chrgTm220KVTx" />
             matcher = Pattern.compile("(.*) name=\"chrgTm220KVTx\" value=\"([a-zA-Z0-9\\ ]+)\"(.*)").matcher(result);
-            matcher.matches();
-            String l2Time = matcher.group(2);
-            System.out.println("l2: " + l2Time);
+            String l2Time = "null";
+            System.out.println("checking l2");
+            if (matcher.matches()) {
+                l2Time = matcher.group(2);
+                System.out.println("l2: " + l2Time);
+            }
 
             // <input type="hidden" name="rmngChrg220KvChrgrTx" value="2 hrs 30 min " id="rmngChrg220KvChrgrTx" />
             matcher = Pattern.compile("(.*) name=\"rmngChrg220KvChrgrTx\" value=\"([a-zA-Z0-9\\ ]+)\"(.*)").matcher(result);
-            matcher.matches();
-            String l3Time = matcher.group(2);
-            System.out.println("l3: " + l3Time);
+            String l3Time = "null";
+            System.out.println("checking l3");
+            if (matcher.matches()) {
+                l3Time = matcher.group(2);
+                System.out.println("l3: " + l3Time);
+            }
 
             // When the car is charging, only one of the ltimes will be populated
             // with a value other than null. Fall through if null, or use default
@@ -217,6 +226,7 @@ public class Carwings {
                 this.chargerType = "?";
             }
 
+            System.out.println("checking chvac");
             // <input type="hidden" name="hvacIn" value="false" id="hvacIn" />
             matcher = Pattern.compile("(.*) name=\"hvacIn\" value=\"([a-zA-Z0-9\\ ]+)\"(.*)").matcher(result);
             matcher.matches();

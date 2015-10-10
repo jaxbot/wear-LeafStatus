@@ -48,6 +48,16 @@
                     android:gravity="center"
                     android:textSize="@dimen/hugetext" />
 
+                <ProgressBar
+                    style="?android:attr/progressBarStyleLarge"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/progressBar"
+                    android:layout_below="@+id/battery_bars"
+                    android:layout_centerHorizontal="true"
+                    android:indeterminate="true"
+                    android:visibility="gone" />
+
                 <TextView
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
@@ -173,15 +183,5 @@
             android:layout_alignParentEnd="true"
             android:spinnerMode="dialog"
             android:layout_margin="10dp" />
-
-        <ProgressBar
-            style="?android:attr/progressBarStyleLarge"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/progressBar"
-            android:layout_below="@+id/battery_bars"
-            android:layout_centerHorizontal="true"
-            android:indeterminate="true"
-            android:visibility="gone" />
     </RelativeLayout>
 </ScrollView>
