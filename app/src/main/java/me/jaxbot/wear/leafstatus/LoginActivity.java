@@ -68,7 +68,7 @@ public class LoginActivity extends Activity {
                             activity.runOnUiThread(new Runnable() {
                                 public void run() {
                                     button.setEnabled(true);
-                                    button.setText("Login failed, check username/password");
+                                    button.setText("Login failed. Make sure you have migrated your account to the new backend.\n\nYou can do this by visiting http://owners.nissanusa.com/nowners/");
                                 }
                             });
 
