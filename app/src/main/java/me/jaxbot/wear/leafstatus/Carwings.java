@@ -70,7 +70,7 @@ public class Carwings {
         this.chargeTime = settings.getString("chargeTime", "");
         this.range = settings.getString("range", "");
         this.lastUpdateTime = settings.getString("lastupdate", "");
-        this.url = PortalURL[settings.getInt("portal", 0)];
+        this.url = "https://gdcportalgw.its-mo.com/orchestration_1021/gdc/";
         this.chargerType = settings.getString("chargerType", "L1");
         this.charging = settings.getBoolean("charging", false);
         this.autoUpdate = settings.getBoolean("autoupdate", true);
@@ -85,27 +85,11 @@ public class Carwings {
 
         if (username.equals("")) return null;
         try {
-            HttpGet httpget = new HttpGet(url);
+            HttpGet httpget = new HttpGet(url + "/UserLoginRequest.php?UserId=" + username + "&cartype=&tz=&lg=en-US&DCMID=&VIN=&RegionCode=NNA&Password=" + password);
             httpget.setHeader("User-Agent", UA);
             httpclient.execute(httpget);
 
-            CookieStore jar = httpclient.getCookieStore();
-            httpclient.setCookieStore(jar);
-            HttpPost httppost = new HttpPost(url + "user/login");
-            httppost.setHeader("User-Agent", UA);
-
-            // Add your data
-            List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
-            nameValuePairs.add(new BasicNameValuePair("username", username));
-            nameValuePairs.add(new BasicNameValuePair("password", password));
-            nameValuePairs.add(new BasicNameValuePair("callFrom", ""));
-            nameValuePairs.add(new BasicNameValuePair("status", ""));
-            nameValuePairs.add(new BasicNameValuePair("_rememberMeCheckbox", ""));
-            httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
-
-            // Execute HTTP Post Request
-            HttpResponse response = httpclient.execute(httppost);
-            return httpclient.getCookieStore();
+            return null;
         } catch (ClientProtocolException e) {
             System.out.println(e.toString());
         } catch (IOException e) {
