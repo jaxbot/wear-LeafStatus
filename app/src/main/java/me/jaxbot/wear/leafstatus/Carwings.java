@@ -153,6 +153,7 @@ public class Carwings {
             final String resultKey = requestResults.getString("resultKey");
 
             final Timer poller = new Timer();
+            final String finalEncodedUsername = encodedUsername;
             poller.schedule(new TimerTask() {
                 @Override
                 public void run() {
@@ -164,6 +165,69 @@ public class Carwings {
                             poller.cancel();
 
                             System.out.println("We got the data we need. It is: " + request);
+                            String recordsRequest = getHTTPString(url + "BatteryStatusRecordsRequest.php?UserId=" + finalEncodedUsername + "&cartype=&tz=America%2FNew_York&lg=en-US&VIN=" + vin + "&RegionCode=NNA");
+                            System.out.println("records: " + recordsRequest);
+                            JSONObject records = new JSONObject(recordsRequest).getJSONObject("BatteryStatusRecords");
+
+                            currentBattery = records.getJSONObject("BatteryStatus").getInt("BatteryRemainingAmount");
+
+                            String l1Time = "null";
+                            String l2Time = "null";
+                            String l3Time = "null";
+
+                            try {
+                                l1Time = records.getJSONObject("TimeRequiredToFull").getString("HourRequiredToFull");
+                            } catch (Exception e) {}
+                            try {
+                            l2Time = records.getJSONObject("TimeRequiredToFull200").getString("HourRequiredToFull");
+                            } catch (Exception e) {}
+                            try {
+                                l3Time = records.getJSONObject("TimeRequiredToFull200_6kW").getString("HourRequiredToFull");
+                            } catch (Exception e) {}
+
+                            chargeTime = l1Time;
+                            chargerType = "L1";
+
+                            int defaultCharger = settings.getInt("defaultChargeLevel", 0);
+                            Log.d(TAG, "def: " + defaultCharger);
+
+                            if (chargeTime.equals("null") || (!l2Time.equals("null") && defaultCharger == 1)) {
+                                chargeTime = l2Time;
+                                chargerType = "L2";
+                            }
+
+                            if (chargeTime.equals("null") || (!l3Time.equals("null") && defaultCharger == 2)) {
+                                chargeTime = l3Time;
+                                chargerType = "L2+";
+                            }
+
+                            if (chargeTime.equals("null")) {
+                                chargeTime = "Unknown";
+                                chargerType = "?";
+                            }
+
+                            charging = !requestResults.getString("chargeMode").equals("NOT_CHARGING");
+
+                            int range_km = (int)Float.parseFloat(records.getString("CruisingRangeAcOff")) / 1000;
+                            System.out.println("rangekm: " + range_km);
+                            if (useMetric)
+                                range = Math.round(range_km) + " km";
+                            else
+                                range = Math.round(range_km * 0.621371) + " mi";
+
+                            Time today = new Time(Time.getCurrentTimezone());
+                            today.setToNow();
+                            lastUpdateTime = today.format("%Y-%m-%d %H:%M:%S");
+
+                            SharedPreferences.Editor editor = settings.edit();
+                            editor.putString("range", range);
+                            editor.putString("chargeTime", chargeTime);
+                            editor.putBoolean("charging", charging);
+                            editor.putString("chargerType", chargerType);
+                            editor.putString("lastupdate", lastUpdateTime);
+                            editor.putInt("currentBattery", currentBattery);
+                            editor.commit();
+
                         }
                     } catch (Exception e) {
                         Log.e(TAG, e.toString());
@@ -171,114 +235,6 @@ public class Carwings {
                 }
             }, 0, 10000);
 
-
-            /*
-            String result = getHTTPString(url + "EV/refresh?vin=" + carid);
-
-            // name="btryLvlNb" value="8"
-            System.out.println("prebattt");
-            System.out.println(result);
-            Matcher matcher = Pattern.compile("(.*)name=\"btryLvlNb\" value=\"([a-zA-Z0-9 ]+)\"(.*)").matcher(result);
-            if (matcher.matches()) {
-                this.currentBattery = Integer.parseInt(matcher.group(2));
-                System.out.println("bat: " + this.currentBattery);
-            }
-
-            /*
-                <td class="chrgType">
-                    Trickle
-                </td>
-                <td class="chrgTypeText">
-                    7 hrs 0 min 
-                </td>
-            matcher = Pattern.compile("(.*) class=\"chrgType\">[\\s]+Trickle[\\s]+\\</td\\>[\\s]+\\<td class=\"chrgTypeText\"\\>[\\s]+([a-zA-Z0-9\\ ]+)(.*)").matcher(result);
-            String l1Time = "null";
-            System.out.println("checking l1");
-            if (matcher.matches()) {
-                l1Time = matcher.group(2);
-                System.out.println("l1: " + l1Time);
-            }
-
-            // <input type="hidden" name="chrgTm220KVTx" value="3 hrs 30 min " id="chrgTm220KVTx" />
-            matcher = Pattern.compile("(.*) name=\"chrgTm220KVTx\" value=\"([a-zA-Z0-9\\ ]+)\"(.*)").matcher(result);
-            String l2Time = "null";
-            System.out.println("checking l2");
-            if (matcher.matches()) {
-                l2Time = matcher.group(2);
-                System.out.println("l2: " + l2Time);
-            }
-
-            // <input type="hidden" name="rmngChrg220KvChrgrTx" value="2 hrs 30 min " id="rmngChrg220KvChrgrTx" />
-            matcher = Pattern.compile("(.*) name=\"rmngChrg220KvChrgrTx\" value=\"([a-zA-Z0-9\\ ]+)\"(.*)").matcher(result);
-            String l3Time = "null";
-            System.out.println("checking l3");
-            if (matcher.matches()) {
-                l3Time = matcher.group(2);
-                System.out.println("l3: " + l3Time);
-            }
-
-            // When the car is charging, only one of the ltimes will be populated
-            // with a value other than null. Fall through if null, or use default
-            // time if available
-            this.chargeTime = l1Time;
-            this.chargerType = "L1";
-
-            int defaultCharger = settings.getInt("defaultChargeLevel", 0);
-            Log.d(TAG, "def: " + defaultCharger);
-
-            if (chargeTime.equals("null") || (!l2Time.equals("null") && defaultCharger == 1)) {
-                this.chargeTime = l2Time;
-                this.chargerType = "L2";
-            }
-
-            if (chargeTime.equals("null") || (!l3Time.equals("null") && defaultCharger == 2)) {
-                this.chargeTime = l3Time;
-                this.chargerType = "L2+";
-            }
-
-            if (chargeTime.equals("null")) {
-                this.chargeTime = "Unknown";
-                this.chargerType = "?";
-            }
-
-            System.out.println("checking chvac");
-            // <input type="hidden" name="hvacIn" value="false" id="hvacIn" />
-            matcher = Pattern.compile("(.*) name=\"hvacIn\" value=\"([a-zA-Z0-9\\ ]+)\"(.*)").matcher(result);
-            matcher.matches();
-            this.currentHvac = !matcher.group(2).equals("false");
-            System.out.println("chvac: " + this.currentHvac);
-
-            // <input type="hidden" name="chargingStsCd" value="NOT_CHARGING" id="chargingStsCd" />
-            matcher = Pattern.compile("(.*) name=\"chargingStsCd\" value=\"([a-zA-Z0-9_ ]+)\"(.*)").matcher(result);
-            matcher.matches();
-            this.charging = !matcher.group(2).equals("NOT_CHARGING");
-            System.out.println("charg: " + this.charging);
-
-            // <input type="hidden" name="rngHvacOffNb" value="103600" id="rngHvacOffNb" />
-            matcher = Pattern.compile("(.*) name=\"rngHvacOffNb\" value=\"(\\d+)\"(.*)").matcher(result);
-            matcher.matches();
-            int range_km = Integer.parseInt(matcher.group(2)) / 1000;
-            System.out.println("rangekm: " + range_km);
-            if (this.useMetric)
-                this.range = Math.round(range_km) + " km";
-            else
-                this.range = Math.round(range_km * 0.621371) + " mi";
-
-            Time today = new Time(Time.getCurrentTimezone());
-            today.setToNow();
-            this.lastUpdateTime = today.format("%Y-%m-%d %H:%M:%S");
-
-            SharedPreferences.Editor editor = settings.edit();
-            editor.putString("range", this.range);
-            editor.putString("chargeTime", this.chargeTime);
-            editor.putBoolean("charging", this.charging);
-            editor.putString("chargerType", this.chargerType);
-            editor.putString("lastupdate", this.lastUpdateTime);
-            editor.putInt("currentBattery", this.currentBattery);
-            editor.commit();
-
-            return true;
-            */
             return true;
         } catch (Exception e) {
             System.out.println("Failure!!!");
@@ -289,12 +245,6 @@ public class Carwings {
     }
 
     public boolean startAC(boolean desired) {
-        CookieStore jar = this.login();
-
-        if (jar == null) return false;
-
-        String carid = this.getCarId(jar);
-
         String endpoint = desired ? "ACRemoteRequest" : "ACRemoteOffRequest";
 
         try {
@@ -312,6 +262,7 @@ public class Carwings {
     }
 
     private String getHTTPString(String url) {
+        System.out.println("Starting GET " + url);
         try {
             DefaultHttpClient httpclient = new DefaultHttpClient();
             HttpGet httpget = new HttpGet(url);
@@ -330,6 +281,7 @@ public class Carwings {
 
             inputStream.close();
 
+            System.out.println("Done GET " + url);
             return result;
         } catch (Exception e) {
             System.out.println(e);
