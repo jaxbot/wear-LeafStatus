@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -49,7 +50,7 @@ public class MyActivity extends ActionBarActivity {
 
         Configuration.init(this);
 
-        if (Configuration.username.equals("")) {
+        if (Configuration.username.equals("") || Configuration.vin.equals("")) {
             Intent intent = new Intent(this, LoginActivity.class);
             startActivity(intent);
             finish();

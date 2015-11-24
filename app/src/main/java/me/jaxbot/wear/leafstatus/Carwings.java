@@ -14,15 +14,18 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
+import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.net.URLEncoder;
 
 /**
  * Created by jonathan on 9/21/14.
@@ -38,6 +41,7 @@ public class Carwings {
 
     private String username;
     private String password;
+    private String vin;
 
     public int currentBattery;
     public String range;
@@ -66,6 +70,7 @@ public class Carwings {
         settings = context.getSharedPreferences("U", 0);
         this.username = settings.getString("username", "");
         this.password = settings.getString("password", "");
+        this.vin = settings.getString("vin", "");
         this.currentBattery = settings.getInt("currentBattery", 0);
         this.chargeTime = settings.getString("chargeTime", "");
         this.range = settings.getString("range", "");
@@ -79,21 +84,23 @@ public class Carwings {
         this.noNightUpdates = settings.getBoolean("noNightUpdates", true);
         this.notifyOnlyWhenCharging = settings.getBoolean("notifyOnlyWhenCharging", false);
         this.alwaysShowStartHVAC = settings.getBoolean("alwaysShowStartHVAC", false);
+        Configuration.init(context);
     }
     private CookieStore login() {
         DefaultHttpClient httpclient = new DefaultHttpClient();
 
         if (username.equals("")) return null;
         try {
-            HttpGet httpget = new HttpGet(url + "/UserLoginRequest.php?UserId=" + username + "&cartype=&tz=&lg=en-US&DCMID=&VIN=&RegionCode=NNA&Password=" + password);
-            httpget.setHeader("User-Agent", UA);
-            httpclient.execute(httpget);
+            String result = getHTTPString(url + "/UserLoginRequest.php?UserId=" + URLEncoder.encode(username, "utf-8") + "&cartype=&tz=&lg=en-US&DCMID=&VIN=&RegionCode=NNA&Password=" + URLEncoder.encode(password, "utf-8"));
+            JSONObject jObject = new JSONObject(result);
+            String vin = jObject.getJSONObject("CustomerInfo").getJSONObject("VehicleInfo").getString("VIN");
+            System.out.println("Your VIN is " + vin);
+            SharedPreferences.Editor editor = settings.edit();
+            editor.putString("vin", vin);
+            editor.commit();
 
-            return null;
-        } catch (ClientProtocolException e) {
-            System.out.println(e.toString());
-        } catch (IOException e) {
-            System.out.println(e.toString());
+        } catch (Exception e) {
+            Log.e(TAG, e.toString());
         }
 
         return null;
@@ -111,7 +118,7 @@ public class Carwings {
 
         // This is a particularly bad and non-future-safe operation,
         // but so is the entire application, since Nissan's API is internal
-        String vehicleHTML = getHTTPString(url + "user/home", jar);
+        String vehicleHTML = getHTTPString(url + "user/home");
         System.out.println(vehicleHTML);
         Pattern pattern = Pattern.compile("(.*)var vinId = \"([a-zA-Z0-9]+)\"(.*)");
         Matcher m = pattern.matcher(vehicleHTML);
@@ -141,7 +148,7 @@ public class Carwings {
             httpclient.setCookieStore(jar);
             httpclient.execute(httpget);
 
-            String result = getHTTPString(url + "EV/refresh?vin=" + carid, jar);
+            String result = getHTTPString(url + "EV/refresh?vin=" + carid);
 
             // name="btryLvlNb" value="8"
             System.out.println("prebattt");
@@ -262,22 +269,27 @@ public class Carwings {
 
         String carid = this.getCarId(jar);
 
-        String output = getHTTPString(url + "EV/setHvac?vin=" + carid + "&fan=" + (desired ? "on" : "off"), jar);
+        String endpoint = desired ? "ACRemoteRequest" : "ACRemoteOffRequest";
 
-        if (!output.equals("true")) {
-            Log.e(TAG, "Start AC failed. Output: " + output);
-            return false;
+        try {
+            String output = getHTTPString(url + endpoint + ".php?UserId=" + URLEncoder.encode(this.username, "utf-8") + "&cartype=&VIN=" + this.vin + "&RegionCode=NNA&tz=America%2FNew_York&lg=en-US");
+            if (!output.contains("success")) {
+                Log.e(TAG, "Start AC failed. Output: " + output);
+                return false;
+            }
+
+        } catch (Exception e) {
+            Log.e(TAG, e.toString());
         }
 
         return true;
     }
 
-    private String getHTTPString(String url, CookieStore jar) {
+    private String getHTTPString(String url) {
         try {
             DefaultHttpClient httpclient = new DefaultHttpClient();
             HttpGet httpget = new HttpGet(url);
             httpget.setHeader("User-Agent", UA);
-            httpclient.setCookieStore(jar);
 
             HttpResponse response = httpclient.execute(httpget);
 
@@ -298,6 +310,7 @@ public class Carwings {
         }
 
         return "";
+
     }
 
 }

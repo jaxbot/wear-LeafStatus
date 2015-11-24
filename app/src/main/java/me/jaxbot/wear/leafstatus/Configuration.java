@@ -18,6 +18,7 @@ public class Configuration {
 
     public static String username;
     public static String password;
+    public static String vin;
     public static String carid;
     public static int portal;
 
@@ -41,6 +42,7 @@ public class Configuration {
         username = settings.getString("username", "");
         password = settings.getString("password", "");
         carid = settings.getString("carid", "");
+        vin = settings.getString("vin", "");
         portal = settings.getInt("portal", 0);
 
         campModeOn = settings.getBoolean("campModeOn", false);
