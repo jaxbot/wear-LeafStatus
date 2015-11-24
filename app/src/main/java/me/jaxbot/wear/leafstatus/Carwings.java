@@ -21,8 +21,11 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.net.URLEncoder;
@@ -139,15 +142,37 @@ public class Carwings {
 
     public boolean update() {
         try {
-            CookieStore jar = this.login();
-            String carid = this.getCarId(jar);
+            String encodedUsername = "";
+            try {
+               encodedUsername = URLEncoder.encode(username, "utf-8");
+            } catch (Exception e) {
+            }
 
-            DefaultHttpClient httpclient = new DefaultHttpClient();
-            HttpGet httpget = new HttpGet(url + "EV/statusRefresh?vin=" + carid);
-            httpget.setHeader("User-Agent", UA);
-            httpclient.setCookieStore(jar);
-            httpclient.execute(httpget);
+            String request = getHTTPString(url + "BatteryStatusCheckRequest.php?UserId=" + encodedUsername + "&cartype=&VIN=" + vin + "&RegionCode=NNA&tz=America%2FNew_York&lg=en-US");
+            JSONObject requestResults = new JSONObject(request);
+            final String resultKey = requestResults.getString("resultKey");
 
+            final Timer poller = new Timer();
+            poller.schedule(new TimerTask() {
+                @Override
+                public void run() {
+                    System.out.println("checking bat status");
+                    try {
+                        String request = getHTTPString(url + "BatteryStatusCheckResultRequest.php?UserId=" + URLEncoder.encode(username, "utf-8") + "&cartype=&resultKey=" + resultKey + "&tz=America%2FNew_York&lg=en-US&VIN=" + vin + "&RegionCode=NNA");
+                        JSONObject requestResults = new JSONObject(request);
+                        if (requestResults.has("chargeMode")) {
+                            poller.cancel();
+
+                            System.out.println("We got the data we need. It is: " + request);
+                        }
+                    } catch (Exception e) {
+                        Log.e(TAG, e.toString());
+                    }
+                }
+            }, 0, 10000);
+
+
+            /*
             String result = getHTTPString(url + "EV/refresh?vin=" + carid);
 
             // name="btryLvlNb" value="8"
@@ -166,7 +191,6 @@ public class Carwings {
                 <td class="chrgTypeText">
                     7 hrs 0 min 
                 </td>
-            */
             matcher = Pattern.compile("(.*) class=\"chrgType\">[\\s]+Trickle[\\s]+\\</td\\>[\\s]+\\<td class=\"chrgTypeText\"\\>[\\s]+([a-zA-Z0-9\\ ]+)(.*)").matcher(result);
             String l1Time = "null";
             System.out.println("checking l1");
@@ -253,6 +277,8 @@ public class Carwings {
             editor.putInt("currentBattery", this.currentBattery);
             editor.commit();
 
+            return true;
+            */
             return true;
         } catch (Exception e) {
             System.out.println("Failure!!!");
