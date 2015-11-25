@@ -218,13 +218,6 @@ public class MyActivity extends ActionBarActivity {
                 final Carwings carwings = new Carwings(context);
 
                 carwings.update();
-                LeafNotification.sendNotification(context, carwings);
-
-                activity.runOnUiThread(new Runnable() {
-                    public void run() {
-                        updateCarStatusUI(carwings);
-                    }
-                });
                 return null;
             }
         }.execute(null, null, null);

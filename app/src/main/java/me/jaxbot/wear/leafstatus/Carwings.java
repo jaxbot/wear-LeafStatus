@@ -1,6 +1,7 @@
 package me.jaxbot.wear.leafstatus;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.text.format.Time;
 import android.util.Log;
@@ -65,6 +66,9 @@ public class Carwings {
 
     SharedPreferences settings;
 
+    Context ctx;
+    Carwings thisInstance = this;
+
     // Disgusting, but we're using the web frontend, and thus will pretend
     String UA = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/45.0.2454.101 Safari/537.36";
 
@@ -88,6 +92,8 @@ public class Carwings {
         this.notifyOnlyWhenCharging = settings.getBoolean("notifyOnlyWhenCharging", false);
         this.alwaysShowStartHVAC = settings.getBoolean("alwaysShowStartHVAC", false);
         Configuration.init(context);
+
+        ctx = context;
     }
     private CookieStore login() {
         DefaultHttpClient httpclient = new DefaultHttpClient();
@@ -228,6 +234,9 @@ public class Carwings {
                             editor.putInt("currentBattery", currentBattery);
                             editor.commit();
 
+                            Log.d(TAG, "Update completed, sending notification.");
+                            LeafNotification.sendNotification(ctx, thisInstance);
+                            ctx.sendBroadcast(new Intent("leafstatus.update"));
                         }
                     } catch (Exception e) {
                         Log.e(TAG, e.toString());

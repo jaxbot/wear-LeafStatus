@@ -72,14 +72,7 @@ public class UpdateCarwingsService extends Service {
             @Override
             protected Void doInBackground(Void... params) {
                 Log.d(TAG, "Calling carwings update...");
-
-                if (carwings.update()) {
-                    Log.d(TAG, "Update completed, sending notification.");
-                    LeafNotification.sendNotification(context, carwings);
-                    sendBroadcast(new Intent("leafstatus.update"));
-                } else {
-                    Log.d(TAG, "Update failed with an exception.");
-                }
+                carwings.update();
 
                 stopSelf();
                 return null;
